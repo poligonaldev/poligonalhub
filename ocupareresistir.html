@@ -240,7 +240,7 @@
     <footer class="mt-16 py-8 border-t border-t-gray-800">
         <div class="container mx-auto px-6 text-center text-gray-400">
             <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="text-lg hover:text-highlight transition-colors">
-                © 2025 Centro Comunitário Criativo Poligonal.
+                © 2025 Centro Comunitário-Criativo Poligonal.
             </a>
         </div>
     </footer>
@@ -254,77 +254,75 @@
 
         // Verifica se o elemento canvas existe antes de tentar criar o gráfico
         if (ctx) {
+            // DADOS DO GRÁFICO
+            const labels = [
+                'Tower Defense', 
+                'Narrativa Político-Social', 
+                'Simulação de Colheita', 
+                'Estética Original', 
+                'Gameplay Ágil'
+            ];
+
+            const datasets = [
+                {
+                    label: 'Ocupar e Resistir',
+                    data: [7, 9, 7, 10, 8],
+                    backgroundColor: 'rgba(230, 57, 70, 0.4)',
+                    borderColor: 'rgba(230, 57, 70, 1)',
+                    pointBackgroundColor: 'rgba(230, 57, 70, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(230, 57, 70, 1)',
+                    borderWidth: 4,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }, 
+                {
+                    label: 'Orcs Must Die!',
+                    data: [10, 3, 2, 5, 7],
+                    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                    borderColor: 'rgba(255, 215, 0, 0.7)',
+                    pointBackgroundColor: 'rgba(255, 215, 0, 0.7)',
+                    borderWidth: 2,
+                    pointRadius: 4
+                }, 
+                {
+                    label: 'Stardew Valley',
+                    data: [2, 6, 10, 7, 6],
+                    backgroundColor: 'rgba(144, 190, 109, 0.2)',
+                    borderColor: 'rgba(144, 190, 109, 0.7)',
+                    pointBackgroundColor: 'rgba(144, 190, 109, 0.7)',
+                    borderWidth: 2,
+                    pointRadius: 4
+                }, 
+                {
+                    label: 'Atomicrops',
+                    data: [9, 5, 8, 7, 9],
+                    backgroundColor: 'rgba(244, 172, 183, 0.2)',
+                    borderColor: 'rgba(244, 172, 183, 0.7)',
+                    pointBackgroundColor: 'rgba(244, 172, 183, 0.7)',
+                    borderWidth: 2,
+                    pointRadius: 4
+                }
+            ];
+
+            // CRIAÇÃO DO GRÁFICO
             new Chart(ctx, {
-                // Define o tipo de gráfico como 'radar'
+                // *** MUDANÇA: Retorno ao gráfico de radar ***
                 type: 'radar',
-                
-                // Contém os dados que serão exibidos no gráfico
                 data: {
-                    // Rótulos para cada um dos eixos do gráfico de radar
-                    labels: [
-                        'Tower Defense', 
-                        ['Narrativa', 'Político-Social'], 
-                        ['Simulação de', 'Colheita'], 
-                        'Estética Original', 
-                        'Gameplay Ágil'
-                    ],
-                    // Conjunto de dados para cada jogo a ser comparado
-                    datasets: [
-                    {
-                        label: 'Ocupar e Resistir',
-                        data: [7, 9, 7, 10, 8],
-                        // Cor de preenchimento (vermelho com transparência)
-                        backgroundColor: 'rgba(230, 57, 70, 0.4)',
-                        // Cor da linha (vermelho sólido e destacado)
-                        borderColor: 'rgba(230, 57, 70, 1)',
-                        // Cor dos pontos na linha
-                        pointBackgroundColor: 'rgba(230, 57, 70, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(230, 57, 70, 1)',
-                        // Espessura da linha para destaque
-                        borderWidth: 4,
-                        pointRadius: 6,
-                        pointHoverRadius: 8
-                    }, 
-                    {
-                        label: 'Orcs Must Die!',
-                        data: [10, 3, 2, 5, 7],
-                        // Cor de preenchimento (amarelo com transparência)
-                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
-                        // Cor da linha (amarelo menos destacado)
-                        borderColor: 'rgba(255, 215, 0, 0.7)',
-                        pointBackgroundColor: 'rgba(255, 215, 0, 0.7)',
-                        borderWidth: 2,
-                        pointRadius: 4
-                    }, 
-                    {
-                        label: 'Stardew Valley',
-                        data: [2, 6, 10, 7, 6],
-                        // Cor de preenchimento (verde com transparência)
-                        backgroundColor: 'rgba(144, 190, 109, 0.2)',
-                        // Cor da linha (verde menos destacado)
-                        borderColor: 'rgba(144, 190, 109, 0.7)',
-                        pointBackgroundColor: 'rgba(144, 190, 109, 0.7)',
-                        borderWidth: 2,
-                        pointRadius: 4
-                    }, 
-                    {
-                        label: 'Atomicrops',
-                        data: [9, 5, 8, 7, 9],
-                        // Cor de preenchimento (rosa com transparência)
-                        backgroundColor: 'rgba(244, 172, 183, 0.2)',
-                        // Cor da linha (rosa menos destacado)
-                        borderColor: 'rgba(244, 172, 183, 0.7)',
-                        pointBackgroundColor: 'rgba(244, 172, 183, 0.7)',
-                        borderWidth: 2,
-                        pointRadius: 4
-                    }]
+                    labels: labels,
+                    datasets: datasets
                 },
                 // Opções de customização e aparência do gráfico
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    // *** NOVO: Configuração de animação para um visual mais atraente ***
+                    animation: {
+                        duration: 1500, // Duração da animação em milissegundos
+                        easing: 'easeInOutQuart', // Efeito de aceleração/desaceleração
+                    },
                     scales: {
                         r: { // Configurações do eixo radial (os valores)
                             angleLines: { color: 'rgba(245, 245, 245, 0.2)' },
@@ -342,11 +340,26 @@
                     },
                     plugins: {
                         legend: { // Configurações da legenda
-                            position: 'top',
+                            // *** CORREÇÃO: Posição alterada para 'right' para garantir visibilidade ***
+                            position: 'right',
+                            align: 'center',
                             labels: {
                                 color: '#F5F5F5',
                                 font: { family: "'Archivo Black', sans-serif", size: 14 },
-                                padding: 20
+                                padding: 20,
+                                usePointStyle: true,
+                                boxWidth: 15
+                            }
+                        },
+                        tooltip: { // Dicas que aparecem ao passar o mouse
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleFont: {
+                                family: "'Archivo Black', sans-serif",
+                                size: 16
+                            },
+                            bodyFont: {
+                                family: "'Roboto Condensed', sans-serif",
+                                size: 14
                             }
                         }
                     }
@@ -355,6 +368,9 @@
         }
     });
 </script>
+
+
+
 
 
 </body>
