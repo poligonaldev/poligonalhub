@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carcarah! - GDD de Uma Página</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos baseados no Brandbook Duminguz */
+        :root {
+            --bg-color: #0F0E12;
+            --text-primary: #F0E6CD;
+            --text-secondary: #a7a299;
+            --accent-red: #872819;
+            --accent-brown: #B7633E;
+            --accent-blue: #155767;
+            --accent-purple: #8900A5;
+            --accent-cyan: #00EAFF;
+            --font-header: 'Montserrat', sans-serif;
+            --font-body: 'Space Mono', monospace;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            background-image:
+                radial-gradient(circle at top right, rgba(21, 87, 103, 0.15), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(183, 99, 62, 0.1), transparent 50%);
+        }
+
+        .font-header {
+            font-family: var(--font-header);
+        }
+
+        .card-bg {
+            background-color: rgba(21, 20, 24, 0.5); /* Um pouco mais claro que o fundo */
+            border: 1px solid var(--accent-blue);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .usp-card {
+            background-color: rgba(15, 14, 18, 0.7);
+            border: 1px solid var(--accent-brown);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .usp-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 234, 255, 0.1);
+        }
+
+        .divider {
+            height: 2px;
+            width: 200px;
+            margin: 2rem auto;
+            background: linear-gradient(to right, transparent, var(--accent-cyan), transparent);
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-cyan);
+            margin-top: 0.75rem;
+        }
+        .section-title.center::after {
+             margin-left: auto;
+             margin-right: auto;
+        }
+
+        .title-cyber {
+            color: var(--text-primary);
+            text-shadow:
+                0 0 5px var(--accent-cyan),
+                0 0 10px var(--accent-cyan),
+                0 0 20px var(--accent-purple),
+                0 0 30px var(--accent-purple);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <header class="text-center my-16 md:my-24">
+            <h1 class="font-header text-6xl sm:text-7xl md:text-8xl font-black tracking-wider" style="color: var(--accent-red);">Carcarah!</h1>
+            <p class="text-xl md:text-2xl mt-4" style="color: var(--text-secondary);">Pega, Mata e Come!</p>
+            <div class="divider my-8"></div>
+        </header>
+
+        <main class="space-y-16">
+
+            <section class="card-bg p-8 rounded-lg">
+                <h2 class="font-header text-4xl mb-4 section-title" style="color: var(--text-primary);">Visão Geral</h2>
+                <p class="text-lg leading-relaxed" style="color: var(--text-secondary);">
+                    O mundo conhecido já não existe há incontáveis anos, a tanto tempo que já não se sabe mais como tudo acabou nem quando nós desistimos de recomeçar. Ainda existe sentido nesse mundo desprezado por deus e amaldiçoado pelo homem? Parahyba enterra seu último ente querido. Sua mente está perdida num labirinto de delírio que aquela realidade se tornou, atormentado por criaturas místicas, antigas máquinas do estado e outros sobreviventes. O solitário andarilho vagueia pelas terras áridas deste mundo devastado em busca do seu destino, se é que existe algum para se buscar… Assolado pela loucura, delírio e realidade se confundem embaralhando a jornada do nosso herói.
+                </p>
+            </section>
+            
+            <section class="card-bg p-8 rounded-lg">
+                <h2 class="font-header text-4xl mb-4 section-title" style="color: var(--text-primary);">Características</h2>
+                 <p class="text-lg leading-relaxed" style="color: var(--text-secondary);">
+                    Desenvolvido na <strong>Unreal Engine 5</strong>, Carcarah! oferece combate em terceira pessoa com um sistema de movimentação e coreografia detalhado, mesclando ataques corpo a corpo com lâminas e disparos de armas de fogo. Os níveis e recursos são gerados proceduralmente, sustentando a imprevisibilidade de um <strong>roguelike</strong> em que cada morte do jogador é incorporada à narrativa como um reflexo do estado mental fragmentado do protagonista — cada retorno à vida representa uma distorção de memória, percepção e realidade, aproximando-o de sua própria ruína ou redenção. Máquinas do estado, visagens, malassombros e sobreviventes hostis, se apresentam como inimigos que se dividem em categorias distintas, porém igualmente implacáveis que precedem chefes envoltos em mistério e simbolismo. A narrativa não linear e de tom onírico se funde ao combate cinematográfico, criando uma experiência intensa, reflexiva e atmosférica.
+                </p>
+            </section>
+
+            <section class="card-bg p-8 rounded-lg">
+                <h3 class="font-header text-3xl mb-6 section-title" style="color: var(--text-primary);">Público e Plataformas</h3>
+                <div class="grid grid-cols-2 gap-4 items-center text-center">
+                    <div>
+                        <span class="text-6xl" role="img" aria-label="crânio">💀</span>
+                        <p class="text-5xl font-black mt-2" style="color: var(--accent-cyan);">16+</p>
+                        <p class="text-lg" style="color: var(--text-secondary);">Classificação</p>
+                    </div>
+                    <div>
+                        <span class="text-6xl" role="img" aria-label="computador">💻</span>
+                        <p class="text-5xl font-bold mt-2" style="color: var(--accent-cyan);">PC</p>
+                        <p class="text-lg" style="color: var(--text-secondary);">Plataforma</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3 class="font-header text-4xl text-center mb-10 section-title center" style="color: var(--text-primary);">Diferenciais de Venda</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="usp-card p-6 rounded-lg text-center flex flex-col items-center justify-start">
+                        <div class="text-6xl mb-4" style="color: var(--accent-cyan);" role="img" aria-label="cacto">🌵</div>
+                        <h4 class="font-header font-bold text-xl mb-2" style="color: var(--text-primary);">Estética Única</h4>
+                        <p style="color: var(--text-secondary);">Narrativa Psicodélica Nordestina.</p>
+                    </div>
+                    <div class="usp-card p-6 rounded-lg text-center flex flex-col items-center justify-start">
+                        <div class="text-6xl mb-4" style="color: var(--accent-cyan);" role="img" aria-label="espadas cruzadas">⚔️</div>
+                        <h4 class="font-header font-bold text-xl mb-2" style="color: var(--text-primary);">Combate Intenso</h4>
+                        <p style="color: var(--text-secondary);">Ágil, preciso e desafiador.</p>
+                    </div>
+                    <div class="usp-card p-6 rounded-lg text-center flex flex-col items-center justify-start">
+                        <div class="text-6xl mb-4" style="color: var(--accent-cyan);" role="img" aria-label="espiral">🌀</div>
+                        <h4 class="font-header font-bold text-xl mb-2" style="color: var(--text-primary);">Narrativa Onírica</h4>
+                        <p style="color: var(--text-secondary);">Não-linear e atmosférica.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-bg p-8 rounded-lg">
+                <h3 class="font-header text-4xl mb-4 text-center section-title center" style="color: var(--text-primary);">Jogos Correlatos</h3>
+                <p class="mb-8 text-center text-lg max-w-3xl mx-auto" style="color: var(--text-secondary);">
+                    O gráfico de radar compara Carcarah! com seus correlatos em cinco eixos principais, posicionando-o no mercado.
+                </p>
+                <div class="relative w-full max-w-2xl mx-auto h-80 md:h-96">
+                    <canvas id="correlatosChart"></canvas>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-16 py-8">
+            <div class="divider"></div>
+            <p style="color: var(--text-secondary);">© 2025 Poligonal Hub. Todos os direitos reservados.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('correlatosChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'Combate 3ª Pessoa', 
+                    'Narrativa Onírica', 
+                    ['Estética', 'Única'], 
+                    'Estrutura Roguelike', 
+                    'Level Design Procedural'
+                ],
+                datasets: [{
+                    label: 'Carcarah!',
+                    data: [8, 9, 10, 9, 8],
+                    backgroundColor: 'rgba(0, 234, 255, 0.35)',
+                    borderColor: 'rgba(0, 234, 255, 1)',
+                    pointBackgroundColor: 'rgba(0, 234, 255, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(0, 234, 255, 1)',
+                    borderWidth: 4,
+                    pointRadius: 6,
+                    pointHoverRadius: 9,
+                }, {
+                    label: 'Returnal',
+                    data: [9, 7, 7, 10, 10],
+                    backgroundColor: 'rgba(137, 0, 165, 0.2)',
+                    borderColor: 'rgba(137, 0, 165, 1)',
+                    pointBackgroundColor: 'rgba(137, 0, 165, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(137, 0, 165, 1)'
+                }, {
+                    label: 'Hellblade',
+                    data: [9, 10, 8, 2, 1],
+                    backgroundColor: 'rgba(135, 40, 25, 0.2)',
+                    borderColor: 'rgba(135, 40, 25, 1)',
+                    pointBackgroundColor: 'rgba(135, 40, 25, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(135, 40, 25, 1)'
+                }, {
+                    label: 'Hyper Light Drifter',
+                    data: [6, 8, 9, 4, 3],
+                    backgroundColor: 'rgba(183, 99, 62, 0.2)',
+                    borderColor: 'rgba(183, 99, 62, 1)',
+                    pointBackgroundColor: 'rgba(183, 99, 62, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(183, 99, 62, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(240, 230, 205, 0.2)' },
+                        grid: { color: 'rgba(240, 230, 205, 0.2)' },
+                        pointLabels: {
+                            color: '#F0E6CD',
+                            font: { family: "'Space Mono', monospace", size: 12 }
+                        },
+                        ticks: {
+                            color: '#F0E6CD',
+                            backdropColor: 'rgba(15, 14, 18, 0.7)',
+                            stepSize: 2
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#F0E6CD',
+                            font: { family: "'Montserrat', sans-serif", size: 14 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: (tooltipItems) => {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                return Array.isArray(label) ? label.join(' ') : label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
