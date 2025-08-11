@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocupar e Resistir - GDD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-light: #f1f1f1;
+            --highlight-yellow: #FFD700;
+            --highlight-red: #E63946;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: var(--bg-color);
+            background-image: linear-gradient(rgba(10, 0, 0, 0.8), rgba(10, 0, 0, 0.8)), url('https://i.imgur.com/QZefyhA.png');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            color: var(--text-light);
+        }
+        .font-display {
+            font-family: 'Archivo Black', sans-serif;
+            letter-spacing: 0.05em;
+        }
+        .card {
+            background-color: rgba(10, 10, 10, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease-in-out;
+        }
+        .card-group .card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 215, 0, 0.7);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .section-title {
+            transition: color 0.3s ease-in-out;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--highlight-yellow);
+            margin-top: 0.75rem;
+            transition: all 0.3s ease-in-out;
+        }
+        .section-title.center::after {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .card-group:hover > .section-title {
+            color: var(--highlight-yellow);
+        }
+        .single-card-group:hover .section-title {
+             color: var(--highlight-yellow);
+        }
+        .icon-emoji {
+            font-size: 3.5rem;
+            line-height: 1;
+            color: var(--highlight-yellow);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        .text-highlight {
+            color: var(--highlight-yellow);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4 md:p-8">
+
+        <!-- Hero Section -->
+        <section class="text-center my-12 md:my-20">
+            <img src="https://i.imgur.com/pUvl5JA.png" alt="Letreiro de Ocupar e Resistir" class="h-24 md:h-32 mx-auto drop-shadow-lg">
+            <p class="text-xl md:text-2xl mt-8 text-gray-200 max-w-3xl mx-auto">Um jogo de estratégia, simulação e defesa sobre a luta por moradia e reforma agrária no Brasil.</p>
+        </section>
+
+        <!-- Informações Gerais -->
+        <section class="single-card-group mb-16">
+            <div class="card p-8 rounded-lg">
+                <h3 class="font-display text-3xl md:text-4xl mb-6 section-title text-white">Informações Gerais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="font-bold text-xl text-white mb-2">Gênero</h4>
+                        <p class="text-gray-300">Farming Sim / Estratégia em Tempo Real (RTS) / Tower Defense</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl text-white mb-2">Plataforma & Público</h4>
+                        <p class="text-gray-300">PC (Steam, Itch.io) / 12+ / Jovens adultos, educadores, ativistas.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl text-white mb-2">Conceito Visual</h4>
+                        <p class="text-gray-300">Estética popular inspirada em charges, com o tom visual dado pelas obras de <span class="text-white font-bold">Regis Soares</span> e <span class="text-white font-bold">Paulo Moreira</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Narrativa -->
+        <section class="single-card-group mb-16">
+            <div class="card p-8 rounded-lg">
+                <h3 class="font-display text-3xl md:text-4xl mb-6 section-title text-white">Narrativa</h3>
+                <blockquote class="border-l-4 pl-6 italic text-gray-200 text-lg" style="border-color: var(--highlight-yellow);">
+                    "Quando chegamos aqui, era tudo concreto... Cuidamos dessa fábrica abandonada, ocupamos com atividades sociais gratuitas para a população e a comunidade prosperou. Isso chamou atenção e agora eles estão vindo. Não importa. Não precisamos de dinheiro. Não precisamos de armas. O que temos em mãos e brota da terra irá nos proteger. Mas precisamos nos unir e organizar." - Luzia
+                </blockquote>
+                <p class="mt-6 text-lg text-gray-300">
+                    O jogo se passa em uma fábrica abandonada em um manguezal de João Pessoa, ocupada por movimentos populares. A comunidade transformou o local, criando escola, cozinha solidária e ateliê. Agora, eles precisam lutar para manter suas terras contra os ataques de grandes corporações, forças corruptas e robôs de internet.
+                </p>
+            </div>
+        </section>
+
+        <!-- Core Loop -->
+        <section class="card-group mb-16">
+            <h3 class="font-display text-3xl md:text-4xl mb-8 text-center section-title center text-white">Core Loop</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card p-6 rounded-lg text-center">
+                    <div class="icon-emoji mb-4">✊</div>
+                    <h4 class="font-display text-2xl mb-2 text-white">1. OCUPAR</h4>
+                    <p class="text-gray-300">Plante, colha e gerencie um assentamento de plantações solidárias.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <div class="icon-emoji mb-4">❤️</div>
+                    <h4 class="font-display text-2xl mb-2 text-white">2. CUIDAR</h4>
+                    <p class="text-gray-300">Una mais trabalhadores à causa, administre recursos e expanda a ocupação.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <div class="icon-emoji mb-4">🛡️</div>
+                    <h4 class="font-display text-2xl mb-2 text-white">3. RESISTIR</h4>
+                    <p class="text-gray-300">Use defesas orgânicas para proteger o assentamento das hordas inimigas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estruturas -->
+        <section class="card-group mb-16">
+            <h3 class="font-display text-3xl md:text-4xl mb-8 text-center section-title center text-white">Estruturas da Ocupação</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card p-6 rounded-lg text-center">
+                    <img src="https://i.imgur.com/8bqUO7x.png" alt="Ícone da Escola Comunitária" class="h-20 mx-auto mb-4">
+                    <h4 class="font-display text-2xl mb-2 text-white">Escola</h4>
+                    <p class="text-gray-300">Fonte de informações sobre mecânicas, inimigos e o contexto político do jogo.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <img src="https://i.imgur.com/0VQHynB.png" alt="Ícone do Paiol" class="h-20 mx-auto mb-4">
+                    <h4 class="font-display text-2xl mb-2 text-white">Paiol</h4>
+                    <p class="text-gray-300">Central de administração de recursos, colheitas e força de trabalho.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <img src="https://i.imgur.com/EJQ64tj.png" alt="Ícone do Ateliê Metalúrgico" class="h-20 mx-auto mb-4">
+                    <h4 class="font-display text-2xl mb-2 text-white">Ateliê Metalúrgico</h4>
+                    <p class="text-gray-300">Local para destravar e melhorar equipamentos e defesas para o modo noturno.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mecânicas -->
+        <section class="single-card-group mb-16">
+            <div class="card p-8 rounded-lg">
+                <h3 class="font-display text-3xl md:text-4xl mb-6 section-title text-white">Mecânicas Principais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-bold text-2xl text-white mb-2">Modo Simulação (Dia)</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li><strong>Cultivo e Gestão:</strong> Plante diversas colheitas com benefícios específicos.</li>
+                            <li><strong>Recrutamento:</strong> Aumente a Força de Trabalho recrutando mais pessoas.</li>
+                            <li><strong>Desenvolvimento:</strong> Desbloqueie melhorias, novas construções e sementes.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-2xl text-white mb-2">Modo Defesa (Noite)</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li><strong>Defesa de Torre:</strong> Hordas de inimigos atacam a fábrica.</li>
+                            <li><strong>Defesas Orgânicas:</strong> Use as colheitas para criar torres, barreiras e armadilhas.</li>
+                            <li><strong>Controle Estratégico:</strong> Posicione defesas para proteger o núcleo da ocupação.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inimigos -->
+        <section class="card-group mb-16">
+             <h3 class="font-display text-3xl md:text-4xl mb-8 text-center section-title center text-white">Inimigos da Ocupação</h3>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card p-6 rounded-lg">
+                    <h4 class="font-display text-xl text-white">Nível 1: Gadistas</h4>
+                    <p class="text-gray-300">Frágeis, mas numerosos. A base das hordas inimigas são monstros antropomorfos semelhantes a bois, porcos e robôs.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h4 class="font-display text-xl text-white">Nível 2: MalACABados</h4>
+                    <p class="text-gray-300">Nível intermediário que serve a interesses opressivos. Monstros antropomorfos com fardas, semelhantes a porcos, cães e cavalos.</p>
+                </div>
+                 <div class="card p-6 rounded-lg">
+                    <h4 class="font-display text-xl text-white">Nível 3: O 1%</h4>
+                    <p class="text-gray-300">O predador alfa. Raros e poderosos, são monstros antropomorfos com características de águias, chacais e répteis.</p>
+                </div>
+             </div>
+        </section>
+        
+        <!-- Level Design -->
+        <section class="single-card-group mb-16">
+            <div class="card p-8 rounded-lg">
+                <h3 class="font-display text-3xl md:text-4xl mb-6 section-title text-white">Level Design</h3>
+                <p class="text-lg text-gray-300 mb-6">
+                    O mapa é um corredor de atividades. Quem joga começa na Área de Colheita, passa pela Fábrica Ocupada (a base de operações) e defende a entrada principal na Área de Construção de Defesas, onde os inimigos surgem em ondas.
+                </p>
+                <div class="bg-gray-900 p-4 rounded-lg overflow-hidden">
+                    <img src="https://i.imgur.com/O3eiVGl.png" alt="Mapa conceitual do level design de Ocupar e Resistir" class="w-full h-auto rounded-md">
+                    <p class="text-center text-sm text-gray-500 mt-2">Mapa conceitual da Fábrica Ocupada e áreas adjacentes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jogos Correlatos -->
+        <section class="single-card-group mb-16">
+            <div class="card p-8 rounded-lg">
+                <h3 class="font-display text-3xl md:text-4xl mb-8 text-center section-title center text-white">Jogos Correlatos</h3>
+                <div class="relative w-full max-w-3xl mx-auto h-80 md:h-96 lg:h-[500px]">
+                    <canvas id="correlatosChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 py-8 border-t border-t-gray-800">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="text-lg hover:text-highlight transition-colors">
+                © 2025 Centro Comunitário Criativo Poligonal.
+            </a>
+        </div>
+    </footer>
+
+    <script>
+    // Garante que o script só será executado após o carregamento completo da página
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // Pega o elemento canvas do HTML onde o gráfico será renderizado
+        const ctx = document.getElementById('correlatosChart');
+
+        // Verifica se o elemento canvas existe antes de tentar criar o gráfico
+        if (ctx) {
+            new Chart(ctx, {
+                // Define o tipo de gráfico como 'radar'
+                type: 'radar',
+                
+                // Contém os dados que serão exibidos no gráfico
+                data: {
+                    // Rótulos para cada um dos eixos do gráfico de radar
+                    labels: [
+                        'Tower Defense', 
+                        ['Narrativa', 'Político-Social'], 
+                        ['Simulação de', 'Colheita'], 
+                        'Estética Original', 
+                        'Gameplay Ágil'
+                    ],
+                    // Conjunto de dados para cada jogo a ser comparado
+                    datasets: [
+                    {
+                        label: 'Ocupar e Resistir',
+                        data: [7, 9, 7, 10, 8],
+                        // Cor de preenchimento (vermelho com transparência)
+                        backgroundColor: 'rgba(230, 57, 70, 0.4)',
+                        // Cor da linha (vermelho sólido e destacado)
+                        borderColor: 'rgba(230, 57, 70, 1)',
+                        // Cor dos pontos na linha
+                        pointBackgroundColor: 'rgba(230, 57, 70, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(230, 57, 70, 1)',
+                        // Espessura da linha para destaque
+                        borderWidth: 4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }, 
+                    {
+                        label: 'Orcs Must Die!',
+                        data: [10, 3, 2, 5, 7],
+                        // Cor de preenchimento (amarelo com transparência)
+                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                        // Cor da linha (amarelo menos destacado)
+                        borderColor: 'rgba(255, 215, 0, 0.7)',
+                        pointBackgroundColor: 'rgba(255, 215, 0, 0.7)',
+                        borderWidth: 2,
+                        pointRadius: 4
+                    }, 
+                    {
+                        label: 'Stardew Valley',
+                        data: [2, 6, 10, 7, 6],
+                        // Cor de preenchimento (verde com transparência)
+                        backgroundColor: 'rgba(144, 190, 109, 0.2)',
+                        // Cor da linha (verde menos destacado)
+                        borderColor: 'rgba(144, 190, 109, 0.7)',
+                        pointBackgroundColor: 'rgba(144, 190, 109, 0.7)',
+                        borderWidth: 2,
+                        pointRadius: 4
+                    }, 
+                    {
+                        label: 'Atomicrops',
+                        data: [9, 5, 8, 7, 9],
+                        // Cor de preenchimento (rosa com transparência)
+                        backgroundColor: 'rgba(244, 172, 183, 0.2)',
+                        // Cor da linha (rosa menos destacado)
+                        borderColor: 'rgba(244, 172, 183, 0.7)',
+                        pointBackgroundColor: 'rgba(244, 172, 183, 0.7)',
+                        borderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                // Opções de customização e aparência do gráfico
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { // Configurações do eixo radial (os valores)
+                            angleLines: { color: 'rgba(245, 245, 245, 0.2)' },
+                            grid: { color: 'rgba(245, 245, 245, 0.2)' },
+                            pointLabels: {
+                                color: '#F5F5F5',
+                                font: { family: "'Roboto Condensed', sans-serif", size: 14 }
+                            },
+                            ticks: {
+                                color: '#F5F5F5',
+                                backdropColor: 'rgba(10, 10, 10, 0.75)',
+                                stepSize: 2
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { // Configurações da legenda
+                            position: 'top',
+                            labels: {
+                                color: '#F5F5F5',
+                                font: { family: "'Archivo Black', sans-serif", size: 14 },
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+
+</body>
+</html>
