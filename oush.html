@@ -12,7 +12,7 @@
     <style>
         /* --- Estética PS1 / Retro Arcade --- */
         body {
-            font-family: 'VT323', monospace;
+            font-family: 'Roboto-mono', sans-serif;
             background-color: #111;
             color: #e0e0e0;
             background-image:
@@ -138,7 +138,7 @@
         <header class="text-center my-24">
             <h1 class="font-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl tracking-wider uppercase title-glitch">OUSH Parahyba</h1>
             <div class="divider my-8"></div>
-            <p class="text-2xl md:text-3xl text-body-gray max-w-3xl mx-auto">550km Paraíba adentro, seguindo a queda do primeiro sol.</p>
+            <p class="text-2xl md:text-3xl text-body-gray max-w-3xl mx-auto">550km Paraíba adentro,<br> seguindo a queda do primeiro sol.</p>
         </header>
 
         <main class="space-y-16">
@@ -171,7 +171,7 @@
                         <div class="text-center border-r border-gray-800 px-2">
                              <div class="text-6xl mb-2">💥</div>
                             <p class="text-6xl font-black text-title-yellow">12+</p>
-                            <p class="text-xl text-body-gray">Classificação</p>
+                            <p class="text-xl text-body-gray">Classificação Indicativa</p>
                         </div>
                         <div class="text-center px-2">
                             <div class="text-6xl mb-2">🎮</div>
@@ -228,7 +228,7 @@
 
             <section class="card-bg p-8 rounded-lg digital-border">
                 <h3 class="font-title text-4xl mb-4 text-center text-title-pink section-title center">Jogos Correlatos</h3>
-                 <p class="mb-8 text-center text-body-gray text-lg max-w-3xl mx-auto">OUSH se posiciona no mercado de corrida arcade, se diferenciando pela sua estética e pela jornada em um cenário real. O gráfico abaixo compara o foco relativo entre os principais pilares do gênero.</p>
+                 <p class="mb-8 text-center text-body-gray text-lg max-w-3xl mx-auto">OUSH se posiciona no mercado de corrida arcade, se diferenciando pela sua estética e pela jornada em um cenário real.</p>
                 <div class="chart-container">
                     <canvas id="competitorAnalysisChart"></canvas>
                 </div>
@@ -236,102 +236,106 @@
 
         </main>
 
-        <footer class="mt-16 py-8 border-t border-t-purple-900/50">
-            <div class="container mx-auto px-6 text-center text-gray-500">
-                <p class="text-lg">© 2076 OUSH PARAHYBA</p>
-            </div>
-        </footer>
+        <!-- Footer -->
+    <footer class="mt-16 py-8 border-t border-t-gray-800">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="text-lg hover:text-highlight transition-colors">
+                © 2025 Centro Comunitário-Criativo Poligonal.
+            </a>
+        </div>
+    </footer>
 
     </div>
 
     <script>
-        const tooltipTitleCallback = (tooltipItems) => {
-            const item = tooltipItems[0];
-            let label = item.chart.data.labels[item.dataIndex];
-            return Array.isArray(label) ? label.join(' ') : label;
-        };
+const tooltipTitleCallback = (tooltipItems) => {
+    const item = tooltipItems[0];
+    let label = item.chart.data.labels[item.dataIndex];
+    return Array.isArray(label) ? label.join(' ') : label;
+};
 
-        const competitorAnalysisCtx = document.getElementById('competitorAnalysisChart').getContext('2d');
-        new Chart(competitorAnalysisCtx, {
-            type: 'radar',
-            data: {
-                labels: ['Velocidade Arcade', 'Combate Veicular', 'Exploração de Pista', ['Estética', 'Retrô'], 'Customização'],
-                datasets: [
-                {
-                    label: 'OUSH Parahyba',
-                    data: [9, 8, 9, 10, 5],
-                    backgroundColor: 'rgba(255, 0, 110, 0.2)',
-                    borderColor: '#ff006e',
-                    pointBackgroundColor: '#ff006e',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#ff006e'
+const competitorAnalysisCtx = document.getElementById('competitorAnalysisChart').getContext('2d');
+new Chart(competitorAnalysisCtx, {
+    type: 'radar',
+    data: {
+        labels: [['Jogabilidade', 'arcade'], ['Combate', 'veícular'], ['Pistas com', 'segredos'], ['Estética', 'Retrô'], 'Customização'],
+        datasets: [
+        {
+            label: 'OUSH Parahyba',
+            data: [9, 7, 10, 10, 4],
+            backgroundColor: 'rgba(255, 0, 110, 0.25)',
+            borderColor: '#ff006e',
+            pointBackgroundColor: '#ff006e',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#ff006e'
+        },
+        {
+            label: 'Rush 2049',
+            data: [10, 7, 10, 8, 7],
+            backgroundColor: 'rgba(255, 190, 11, 0.2)',
+            borderColor: '#ffbe0b',
+            pointBackgroundColor: '#ffbe0b',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#ffbe0b'
+        },
+        {
+            label: 'Destruction Derby',
+            data: [6, 10, 4, 7, 3],
+            backgroundColor: 'rgba(200, 200, 200, 0.2)',
+            borderColor: '#c8c8c8',
+            pointBackgroundColor: '#c8c8c8',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#c8c8c8'
+        },
+        {
+            label: 'Dirt Showdown',
+            data: [4, 9, 6, 4, 7],
+            backgroundColor: 'rgba(0, 255, 255, 0.2)',
+            borderColor: '#00ffff',
+            pointBackgroundColor: '#00ffff',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#00ffff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            r: {
+                angleLines: { color: 'rgba(131, 56, 236, 0.2)' },
+                grid: { color: 'rgba(131, 56, 236, 0.2)' },
+                pointLabels: {
+                     color: '#e0e0e0',
+                    font: { family: "'Quantico', sans-serif", size: 16 }
                 },
-                {
-                    label: 'Rush 2049',
-                    data: [10, 7, 10, 8, 7],
-                    backgroundColor: 'rgba(255, 190, 11, 0.2)',
-                    borderColor: '#ffbe0b',
-                    pointBackgroundColor: '#ffbe0b',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#ffbe0b'
-                },
-                {
-                    label: 'Destruction Derby',
-                    data: [6, 10, 4, 7, 3],
-                    backgroundColor: 'rgba(200, 200, 200, 0.2)',
-                    borderColor: '#c8c8c8',
-                    pointBackgroundColor: '#c8c8c8',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#c8c8c8'
-                },
-                {
-                    label: 'Burnout 3',
-                    data: [10, 9, 6, 6, 4],
-                    backgroundColor: 'rgba(0, 255, 255, 0.2)',
-                    borderColor: '#00ffff',
-                    pointBackgroundColor: '#00ffff',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#00ffff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: 'rgba(131, 56, 236, 0.2)' },
-                        grid: { color: 'rgba(131, 56, 236, 0.2)' },
-                        pointLabels: {
-                             color: '#e0e0e0',
-                            font: { family: "'VT323', monospace", size: 16 }
-                        },
-                        ticks: {
-                            color: '#a0a0a0',
-                            backdropColor: 'rgba(0,0,0,0.8)',
-                            stepSize: 2,
-                            font: { family: "'VT323', monospace", size: 12 }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                         labels: {
-                            color: '#d1d5db',
-                            font: { family: "'Quantico', sans-serif", size: 14 }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: { title: tooltipTitleCallback }
-                    }
+                ticks: {
+                    color: '#a0a0a0',
+                    backdropColor: 'rgba(0,0,0,0.8)',
+                    stepSize: 2,
+                    font: { family: "'Quantico', sans-serif", size: 12 }
                 }
             }
-        });
-    </script>
+        },
+        plugins: {
+            legend: {
+                position: 'top',
+                 labels: {
+                    color: '#d1d5db',
+                    font: { family: "'Quantico', sans-serif", size: 14 }
+                }
+            },
+            tooltip: {
+                callbacks: { title: tooltipTitleCallback }
+            }
+        }
+    }
+});
+</script>
+
 
 </body>
 </html>
