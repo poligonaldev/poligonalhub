@@ -159,7 +159,7 @@
                             <p class="text-body-gray text-lg">Uma jornada de 550km pela Paraíba. Desbloqueie novas cidades, pistas e carros ao vencer cada etapa da rota, de João Pessoa a Sousa.</p>
                         </div>
                         <div>
-                            <h4 class="font-bold text-2xl text-title-yellow">Modo Batalha (Arcade)</h4>
+                            <h4 class="font-bold text-2xl text-title-yellow">Batalha (Modos PVP)</h4>
                             <p class="text-body-gray text-lg">Até 4 jogadores em tela dividida. Escolha carros e arenas para batalhas em modos Free-for-All, Duplas ou o caótico Monster Truck (1x3).</p>
                         </div>
                     </div>
@@ -211,7 +211,8 @@
             <section class="card-bg p-8 rounded-lg digital-border">
                 <h2 class="font-title text-4xl mb-4 text-title-pink section-title">A Rota da Corrida</h2>
                 <p class="text-xl text-body-gray leading-relaxed mb-6">
-                    A rota da campanha atravessa o estado em 7 estágios: João Pessoa > Bananeiras > Ingá > Campina Grande > Congo > Princesa Isabel > Sousa.
+                    A rota da campanha atravessa o estado em 7 estágios: João Pessoa > Bananeiras > Ingá > Campina Grande > Congo > Princesa Isabel > Sousa.<br>
+                    Avançar na corrida de rua desbloqueia novos carros, arenas e modos para a Batalha.
                 </p>
                 <div class="w-full h-96 rounded-lg overflow-hidden border-2 border-purple-900/50">
                     <iframe 
@@ -258,7 +259,7 @@ const competitorAnalysisCtx = document.getElementById('competitorAnalysisChart')
 new Chart(competitorAnalysisCtx, {
     type: 'radar',
     data: {
-        labels: [['Jogabilidade', 'arcade'], ['Combate', 'veícular'], ['Pistas com', 'segredos'], ['Estética', 'Retrô'], 'Customização'],
+        labels: [['Jogabilidade', 'arcade'], ['Combate', 'veícular  '], ['Pistas com', 'segredos'], ['Estética', 'Retrô'], 'Customização'],
         datasets: [
         {
             label: 'OUSH Parahyba',
