@@ -10,9 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilo Final - Tema Fogo
-           As cores foram fixadas diretamente nas variáveis CSS.
-        */
+        /* Estilo Final - Tema Fogo */
         :root {
             --bg-main: #3a1202;
             --bg-card: rgba(1, 1, 1, 0.7);
@@ -22,9 +20,7 @@
             --highlight-secondary: #fae0cb;
             --border-color: rgba(162, 13, 6, 0.5);
         }
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Roboto Condensed', sans-serif;
             background-color: var(--bg-main);
@@ -33,12 +29,8 @@
             background-position: center center;
             background-attachment: fixed;
             color: var(--text-light);
-            transition: background-color 0.5s ease, color 0.5s ease;
         }
-        .font-display {
-            font-family: 'Archivo Black', sans-serif;
-            letter-spacing: 0.05em;
-        }
+        .font-display { font-family: 'Archivo Black', sans-serif; letter-spacing: 0.05em; }
         .card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -46,58 +38,29 @@
             -webkit-backdrop-filter: blur(12px);
             transition: all 0.3s ease-in-out;
         }
-        .card-group .card:hover {
+        /* EFEITOS DE HOVER RESTAURADOS */
+        .card-group .card:hover, .single-card-group .card:hover {
             transform: translateY(-8px);
             border-color: var(--highlight-primary);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .section-title {
+        .section-title { 
             color: var(--text-light);
             transition: color 0.3s ease-in-out;
         }
         .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background-color: var(--highlight-primary);
-            margin-top: 0.75rem;
+            content: ''; display: block; width: 80px; height: 4px;
+            background-color: var(--highlight-primary); margin-top: 0.75rem;
             transition: all 0.3s ease-in-out;
         }
-        .section-title.center::after {
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .section-title.center::after { margin-left: auto; margin-right: auto; }
         .card-group:hover > .section-title,
         .single-card-group:hover .section-title {
              color: var(--highlight-primary);
         }
-        .icon-pictogram {
-            filter: brightness(0) invert(1);
-            opacity: 0.9;
-        }
-        .title-construct {
-            position: relative;
-            overflow: hidden;
-        }
-        .title-construct::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0) 5%, rgba(0,0,0,0) 95%, rgba(255, 215, 0, 0.15) 100%);
-            animation: scanline 4s linear infinite;
-        }
-        .header-img-red-filter {
-            /* Filtro para aproximar a cor da imagem ao vermelho #a20d06 */
-            filter: brightness(0.6) sepia(1) hue-rotate(-50deg) saturate(8);
-        }
-        @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
+        .icon-pictogram { filter: brightness(0) invert(1); opacity: 0.9; }
+        .header-img-red-filter { filter: brightness(0.6) sepia(1) hue-rotate(-50deg) saturate(8); }
+        
         /* Estilos do Carrossel de Inimigos */
         .carousel-wrapper { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
         .carousel-container { position: relative; width: 100%; max-width: 400px; height: 450px; perspective: 1000px; }
@@ -113,16 +76,30 @@
         .carousel-nav button { background: none; border: none; cursor: pointer; }
         .carousel-nav svg { width: 40px; height: 40px; stroke: var(--text-light); transition: stroke 0.3s ease; }
         .carousel-nav button:hover svg { stroke: var(--highlight-primary); }
+
+        /* Estilo da Moldura Fita Adesiva */
+        .character-image-container {
+            transition: all 0.3s ease-in-out;
+        }
+        .frame-tape {
+            border: 6px solid #222;
+            padding: 8px;
+            background-color: #111;
+            transform: rotate(-2deg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            display: inline-block; /* Garante que a moldura se ajuste ao conteúdo */
+        }
+        .frame-tape:hover {
+             transform: rotate(1deg) scale(1.02);
+        }
     </style>
 </head>
 <body class="antialiased">
-
     <!-- Main Content -->
     <main class="container mx-auto p-4 md:p-8">
         <!-- Hero Section -->
         <section class="text-center my-12 md:my-20">
-            <div class="inline-block title-construct">
-                <!-- Imagem com o filtro de cor aplicado -->
+            <div class="inline-block">
                 <img src="https://i.imgur.com/pUvl5JA.png" alt="Letreiro de Ocupar e Resistir" class="h-24 md:h-32 mx-auto drop-shadow-lg header-img-red-filter">
             </div>
             <p class="text-xl md:text-2xl mt-8 text-gray-200 max-w-3xl mx-auto">Um jogo de colheita, gerenciamento e defesa de torres<br> sobre a luta pela reforma agrária e urbana no Nordeste Brasileiro.</p>
@@ -154,19 +131,34 @@
         <section class="single-card-group mb-16">
             <div class="card p-8 rounded-lg">
                 <h3 class="font-display text-3xl md:text-4xl mb-6 section-title">Narrativa</h3>
-                <div class="flex flex-col md:flex-row items-center gap-8">
-                    <div class="flex-shrink-0">
-                         <img src="https://i.imgur.com/01mC08E.png" alt="Ícone da personagem Luzia" class="h-32 w-32">
+                
+                <!-- Layout Fixo: Alternado com Moldura Fita Adesiva -->
+                <div class="narrative-content">
+                    <div class="flex flex-col md:flex-row items-center gap-8 mb-12">
+                        <div class="flex-shrink-0 character-image-container frame-tape">
+                            <!-- Imagem com altura automática para manter proporção -->
+                            <img src="https://i.imgur.com/01mC08E.png" alt="Retrato de Luzia" class="w-48 h-auto">
+                        </div>
+                        <div class="flex-grow">
+                            <blockquote class="border-l-4 pl-4 italic text-lg" style="border-color: var(--highlight-secondary); color: var(--text-light);">
+                                "Quando chegamos aqui, era tudo concreto... Cuidamos dessa fábrica abandonada, ocupamos com atividades sociais gratuitas para a população e a comunidade prosperou. Isso chamou atenção e agora eles estão vindo. Não importa. Não precisamos de dinheiro. Não precisamos de armas. O que temos em mãos e brota da terra irá nos proteger. Mas precisamos nos unir e organizar." - Luzia
+                            </blockquote>
+                        </div>
                     </div>
-                    <div class="flex-grow">
-                        <blockquote class="border-l-4 pl-4 italic text-lg" style="border-color: var(--highlight-secondary); color: var(--text-light);">
-                            "Quando chegamos aqui, era tudo concreto... Cuidamos dessa fábrica abandonada, ocupamos com atividades sociais gratuitas para a população e a comunidade prosperou. Isso chamou atenção e agora eles estão vindo. Não importa. Não precisamos de dinheiro. Não precisamos de armas. O que temos em mãos e brota da terra irá nos proteger. Mas precisamos nos unir e organizar." - Luzia
-                        </blockquote>
+                    <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+                        <div class="flex-shrink-0 character-image-container frame-tape">
+                             <!-- Imagem com altura automática para manter proporção -->
+                            <img src="https://i.imgur.com/1L04EFF.png" alt="Retrato de Antônio" class="w-48 h-auto">
+                        </div>
+                        <div class="flex-grow">
+                            <blockquote class="border-r-4 md:border-r-0 md:border-l-4 pr-4 md:pr-0 md:pl-4 italic text-lg text-left md:text-right" style="border-color: var(--highlight-secondary); color: var(--text-light);">
+                                "Quando eu cheguei aqui era tudo máquina. Eles sabotaram a cooperativa e tudo ficou às ruínas. Então a população veio e tudo ao redor melhorou. Vou usar cada parafuso e pedaço de sucata que conseguir pra defender esse lugar. Não vou perder esse chão de fábrica de novo." - Antônio
+                            </blockquote>
+                        </div>
                     </div>
+                    <p class="mt-8 text-lg" style="color: var(--text-muted);">O jogo se passa em uma fábrica abandonada em um manguezal de João Pessoa, ocupada por movimentos populares. A comunidade transformou o local, criando escola, cozinha solidária e ateliê. Agora, eles precisam lutar para manter suas terras contra os ataques de grandes corporações, forças corruptas e robôs de internet.</p>
                 </div>
-                 <p class="mt-6 text-lg" style="color: var(--text-muted);">
-                    O jogo se passa em uma fábrica abandonada em um manguezal de João Pessoa, ocupada por movimentos populares. A comunidade transformou o local, criando escola, cozinha solidária e ateliê. Agora, eles precisam lutar para manter suas terras contra os ataques de grandes corporações, forças corruptas e robôs de internet.
-                </p>
+
             </div>
         </section>
 
@@ -302,6 +294,7 @@
             let currentIndex = 0;
 
             function rotateCarousel() {
+                if (!carousel) return;
                 const angle = currentIndex * -theta;
                 carousel.style.transform = `rotateY(${angle}deg)`;
             }
@@ -316,8 +309,8 @@
                 rotateCarousel();
             }
 
-            nextBtn.addEventListener('click', () => { currentIndex++; rotateCarousel(); });
-            prevBtn.addEventListener('click', () => { currentIndex--; rotateCarousel(); });
+            if(nextBtn) nextBtn.addEventListener('click', () => { currentIndex++; rotateCarousel(); });
+            if(prevBtn) prevBtn.addEventListener('click', () => { currentIndex--; rotateCarousel(); });
             
             setupCarousel();
             window.addEventListener('resize', setupCarousel);
