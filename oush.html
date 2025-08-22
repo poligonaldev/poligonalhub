@@ -3,24 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OUSH Parahyba 2076 - 1PG-GDD</title>
+    <title>OUSH PB 2076 - 1PG-GDD</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,700&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Quantico:wght@400;700&family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* --- Estética PS1 / Retro Arcade --- */
+        /* Paleta Fixa: Asfalto e Neon */
+        :root {
+            --bg-main: #000000;
+            --bg-card: rgba(20, 20, 20, 0.7);
+            --text-light: #FFFFFF;
+            --text-muted: #9D50B3;
+            --highlight-primary: #5A9DC3;
+            --highlight-secondary: #B40000;
+            --border-color: rgba(90, 157, 195, 0.5);
+            --scanline-color: rgba(90, 157, 195, 0.05);
+        }
+
         body {
             font-family: 'Roboto-mono', sans-serif;
-            background-color: #111;
-            color: #e0e0e0;
+            background-color: var(--bg-main);
+            color: var(--text-light);
             background-image:
-                linear-gradient(rgba(17, 17, 17, 0.9), #111),
-                repeating-linear-gradient(0deg, rgba(131, 56, 236, 0.05), rgba(131, 56, 236, 0.05) 1px, transparent 1px, transparent 4px); /* Scanlines */
+                linear-gradient(rgba(0, 0, 0, 0.9), var(--bg-main)),
+                repeating-linear-gradient(0deg, var(--scanline-color), var(--scanline-color) 1px, transparent 1px, transparent 4px);
         }
         .font-title {
+            font-family: 'Audiowide', sans-serif;
+        }
+        .card-bg {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.4);
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+        .usp-card {
+            background-color: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .usp-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0, 0.2);
+            border-color: var(--highlight-secondary);
+        }
+        .divider {
+            height: 2px; width: 200px; margin: 2rem auto;
+            background: linear-gradient(to right, transparent, var(--highlight-primary), transparent);
+            opacity: 0.7; position: relative;
+        }
+        .divider::before, .divider::after {
+            content: '>>'; position: absolute; top: 50%; transform: translateY(-50%);
+            color: var(--highlight-primary); opacity: 0.6; font-size: 1.5rem;
             font-family: 'Quantico', sans-serif;
+        }
+        .divider::before { left: 10px; content: '<<'; }
+        .divider::after { right: 10px; }
+
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 3px;
+            background-color: var(--highlight-primary); margin-top: 0.75rem;
+            box-shadow: 0 0 5px var(--highlight-primary);
+        }
+        .section-title.center::after { margin-left: auto; margin-right: auto; }
+        
+        /* --- ESTRUTURA E ESTILO FINAL DO TÍTULO --- */
+        #title-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 0.25em;
+            line-height: 1;
+        }
+        #main-title-text { 
+            font-weight: 700; 
+            font-size: 10vw;
+            color: var(--text-light);
+        }
+        #main-title-year { 
+            display: flex; 
+            flex-direction: column; 
+            font-size: calc(10vw / 4 * 0.9);
+            line-height: 0.9;
+        }
+        #main-title-year span { 
+            font-weight: 700;
+            display: block;
+        }
+
+        /* Estilo Fixo: Sombra Dura */
+        #title-container { 
+            text-shadow: 3px 3px 0px var(--bg-main), 5px 5px 0px var(--highlight-primary); 
         }
         .chart-container {
             position: relative;
@@ -31,312 +109,254 @@
             height: 400px;
             max-height: 500px;
         }
-        /* Esquema de Cores "Forró" */
-        .text-title-pink { color: #ff006e; }
-        .text-title-yellow { color: #ffbe0b; }
-        .text-title-purple { color: #8338ec; }
-        .text-body-gray { color: #c0c0c0; }
 
-        .card-bg {
-            background-color: rgba(10, 10, 20, 0.6);
-            border: 1px solid rgba(131, 56, 236, 0.3);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.4);
-            position: relative;
-        }
-        .usp-card {
-            background-color: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255, 190, 11, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .usp-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(255, 190, 11, 0.1);
-        }
-        .divider {
-            height: 2px;
-            width: 200px;
-            margin: 2rem auto;
-            background: linear-gradient(to right, transparent, rgba(255, 0, 110, 0.5), transparent);
-            position: relative;
-        }
-        .divider::before, .divider::after {
-            content: '>>';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 0, 110, 0.4);
-            font-size: 1.5rem;
-            font-family: 'Quantico', sans-serif;
-        }
-        .divider::before { left: 10px; content: '<<'; }
-        .divider::after { right: 10px; }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background-color: #ff006e;
-            margin-top: 0.75rem;
-            box-shadow: 0 0 5px #ff006e;
-        }
-        .section-title.center::after {
-             margin-left: auto;
-             margin-right: auto;
-        }
-        .title-glitch {
-            font-weight: 700;
-            color: #ff006e;
-            position: relative;
-            animation: glitch-anim 2.5s infinite steps(1);
-        }
-        .title-glitch::before, .title-glitch::after {
-            content: 'OUSH Parahyba';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #111;
-        }
-        .title-glitch::before {
-            color: #00ffff;
-            animation: glitch-anim-2 2.5s infinite steps(1);
-            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-        }
-        .title-glitch::after {
-            color: #ffbe0b;
-            animation: glitch-anim-3 2.5s infinite steps(1);
-            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-        }
-        @keyframes glitch-anim { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
-        @keyframes glitch-anim-2 { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(2px, -2px); } 40% { transform: translate(-2px, 2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(-2px, -2px); } }
-        @keyframes glitch-anim-3 { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-2px, -2px); } 40% { transform: translate(2px, 2px); } 60% { transform: translate(-2px, 2px); } 80% { transform: translate(2px, -2px); } }
-
-        .digital-border::before, .digital-border::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-style: solid;
-            border-color: rgba(131, 56, 236, 0.4);
-        }
-        .digital-border::before {
-            top: 5px; left: 5px; border-width: 2px 0 0 2px;
-        }
-        .digital-border::after {
-            bottom: 5px; right: 5px; border-width: 0 2px 2px 0;
-        }
     </style>
 </head>
 <body class="text-white">
 
     <div class="container mx-auto p-4 md:p-8">
-
         <header class="text-center my-24">
-            <h1 class="font-title text-6xl sm:text-7xl md:text-8xl lg:text-9xl tracking-wider uppercase title-glitch">OUSH Parahyba</h1>
+            <div id="title-container">
+                <h1 id="main-title-text" class="font-title tracking-wider uppercase">OUSH PB</h1>
+                <div id="main-title-year" class="font-title">
+                    <span>2</span><span>0</span><span>7</span><span>6</span>
+                </div>
+            </div>
             <div class="divider my-8"></div>
-            <p class="text-2xl md:text-3xl text-body-gray max-w-3xl mx-auto">550km Paraíba adentro,<br>seguindo o Primeiro Sol<br>do nascente ao poente.</p>
+            <p class="text-2xl md:text-3xl max-w-3xl mx-auto" style="color: var(--text-muted);">550 km Paraíba adentro, seguindo o Primeiro Sol.</p>
         </header>
-
         <main class="space-y-16">
-
-            <section class="card-bg p-8 rounded-lg digital-border">
-                <h2 class="font-title text-4xl mb-4 text-title-pink section-title">Visão Geral</h2>
-                <p class="text-xl text-body-gray leading-relaxed">
-                    OUSH Parahyba 2076 é um jogo de corrida e ação que segue a insana corrida de rua que começa com o primeiro sol em Cabo Branco e segue uma rota de 550km adentro do estado da Paraíba. Cada estágio exibe a exuberância geográfica da Paraíba em horários conseguintes, seguindo o passar do dia durante a corrida. O jogo terá um modo de campanha (corrida de rua) e um modo de combate arcade para até 4 jogadores em tela dividida (coop local).
+             <section class="card-bg p-8 rounded-lg">
+                <h2 class="font-title text-4xl mb-4 section-title" style="color: var(--highlight-primary);">Visão Geral</h2>
+                <p class="text-xl leading-relaxed" style="color: var(--text-muted);">
+                    OUSH PB 2076 é um jogo de corrida e ação que segue a insana corrida de rua que começa com o primeiro sol em Cabo Branco e segue uma rota de 550 km adentro do estado da Paraíba. Cada estágio exibe a exuberância geográfica da Paraíba em horários conseguintes, seguindo o passar do dia durante a corrida. O jogo terá uma Campanha (corrida de rua), Circuitos e modo Combate para até 4 jogadores em tela dividida (coop local).
                 </p>
-            </section>
-
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card-bg p-8 rounded-lg digital-border">
-                    <h3 class="font-title text-3xl mb-6 text-title-pink section-title">Modos de Jogo</h3>
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="font-bold text-2xl text-title-yellow">Corrida de Rua (Campanha)</h4>
-                            <p class="text-body-gray text-lg">Uma jornada de 550km pela Paraíba. Desbloqueie novas cidades, pistas e carros ao vencer cada etapa da rota, de João Pessoa a Sousa.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-2xl text-title-yellow">Batalha (Modos PVP)</h4>
-                            <p class="text-body-gray text-lg">Até 4 jogadores em tela dividida. Escolha carros e arenas para batalhas em modos Free-for-All, Duplas ou o caótico Monster Truck (1x3).</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-bg p-8 rounded-lg digital-border flex flex-col">
-                    <h3 class="font-title text-3xl mb-6 text-title-pink section-title">Público e Plataformas</h3>
-                    <div class="flex-grow grid grid-cols-2 gap-4 items-center">
-                        <div class="text-center border-r border-gray-800 px-2">
-                             <div class="text-6xl mb-2">💥</div>
-                            <p class="text-6xl font-black text-title-yellow">12+</p>
-                            <p class="text-xl text-body-gray">Classificação Indicativa</p>
-                        </div>
-                        <div class="text-center px-2">
-                            <div class="text-6xl mb-2">🎮</div>
-                            <p class="text-3xl font-bold text-title-yellow">Plataforma</p>
-                            <p class="text-xl text-body-gray">PC</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="card-bg p-8 rounded-lg digital-border">
-                <h3 class="font-title text-4xl text-center mb-10 text-title-pink section-title center">Recursos Principais</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="usp-card p-6 rounded-lg text-center">
-                        <div class="text-5xl mb-4 text-title-yellow">🗺️</div>
-                        <h4 class="font-bold text-xl mb-2 text-title-yellow">Rally Paraibano</h4>
-                        <p class="text-body-gray">Corra por 7 cidades reais com clima e hora dinâmicos.</p>
-                    </div>
-                    <div class="usp-card p-6 rounded-lg text-center">
-                        <div class="text-5xl mb-4 text-title-yellow">🚧</div>
-                        <h4 class="font-bold text-xl mb-2 text-title-yellow">Pistas Frenéticas</h4>
-                        <p class="text-body-gray">Múltiplos atalhos, saltos e trechos dinâmicos.</p>
-                    </div>
-                    <div class="usp-card p-6 rounded-lg text-center">
-                        <div class="text-5xl mb-4 text-title-yellow">🚗</div>
-                        <h4 class="font-bold text-xl mb-2 text-title-yellow">Frota Popular</h4>
-                        <p class="text-body-gray">Carros icônicos do imaginário brasileiro (Cuska, Oni, Tonby).</p>
-                    </div>
-                    <div class="usp-card p-6 rounded-lg text-center">
-                         <div class="text-5xl mb-4 text-title-yellow">💥</div>
-                        <h4 class="font-bold text-xl mb-2 text-title-yellow">Dano Real</h4>
-                        <p class="text-body-gray">Direção ofensiva é a chave. Capotou? Explodiu.</p>
-                    </div>
-                </div>
             </section>
             
-            <section class="card-bg p-8 rounded-lg digital-border">
-                <h2 class="font-title text-4xl mb-4 text-title-pink section-title">A Rota da Corrida</h2>
-                <p class="text-xl text-body-gray leading-relaxed mb-6">
-                    A rota da campanha atravessa o estado em 7 estágios: João Pessoa > Bananeiras > Ingá > Campina Grande > Congo > Princesa Isabel > Sousa.<br>
-                    Avançar na corrida de rua desbloqueia novos carros, arenas e modos para a Batalha.
-                </p>
-                <div class="w-full h-96 rounded-lg overflow-hidden border-2 border-purple-900/50">
-                    <iframe 
-                        src="https://www.google.com/maps/d/embed?mid=1qS8d8-RpHeIhAt318Uzx90fDc3pFEe4" 
-                        width="100%" 
-                        height="100%" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
+            <section class="card-bg p-8 rounded-lg">
+                <h3 class="font-title text-3xl mb-6 section-title" style="color: var(--highlight-primary);">Público e Plataformas</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <!-- Card Classificação -->
+                    <div class="bg-black/20 p-6 rounded-lg text-center border-2 hover:border-red-500/80 transition-colors duration-300" style="border-color: var(--border-color);">
+                        <p class="font-semibold text-lg uppercase tracking-widest" style="color: var(--text-muted);">Classificação</p>
+                        <p class="font-title text-7xl" style="color: var(--highlight-secondary);">12+</p>
+                    </div>
+                    <!-- Card Plataforma -->
+                    <div class="bg-black/20 p-6 rounded-lg text-center border-2 hover:border-red-500/80 transition-colors duration-300" style="border-color: var(--border-color);">
+                        <p class="font-semibold text-lg uppercase tracking-widest" style="color: var(--text-muted);">Plataforma</p>
+                        <p class="font-title text-7xl" style="color: var(--highlight-secondary);">PC</p>
+                    </div>
                 </div>
             </section>
 
-            <section class="card-bg p-8 rounded-lg digital-border">
-                <h3 class="font-title text-4xl mb-4 text-center text-title-pink section-title center">Jogos Correlatos</h3>
-                 <p class="mb-8 text-center text-body-gray text-lg max-w-3xl mx-auto">OUSH se posiciona no mercado de corrida arcade, se diferenciando pela sua estética e pela jornada em um cenário real.</p>
-                <div class="chart-container">
+            <section class="card-bg p-8 rounded-lg">
+                <h3 class="font-title text-4xl text-center mb-10 section-title center" style="color: var(--highlight-primary);">Recursos Principais</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="usp-card p-6 rounded-lg text-center">
+                        <div class="text-5xl mb-4">🗺️</div>
+                        <h4 class="font-bold text-xl mb-2" style="color: var(--highlight-secondary);">Rally Paraibano</h4>
+                        <p style="color: var(--text-muted);">Corra por 7 cidades reais com clima e hora dinâmicos.</p>
+                    </div>
+                    <div class="usp-card p-6 rounded-lg text-center">
+                        <div class="text-5xl mb-4">🚧</div>
+                        <h4 class="font-bold text-xl mb-2" style="color: var(--highlight-secondary);">Pistas Frenéticas</h4>
+                        <p style="color: var(--text-muted);">Múltiplos atalhos, saltos e trechos dinâmicos.</p>
+                    </div>
+                    <div class="usp-card p-6 rounded-lg text-center">
+                        <div class="text-5xl mb-4">🚗</div>
+                        <h4 class="font-bold text-xl mb-2" style="color: var(--highlight-secondary);">Frota Popular</h4>
+                        <p style="color: var(--text-muted);">Carros icônicos do imaginário brasileiro (Amaral, Cuska, Oni, Tonby).</p>
+                    </div>
+                    <div class="usp-card p-6 rounded-lg text-center">
+                        <div class="text-5xl mb-4">💥</div>
+                        <h4 class="font-bold text-xl mb-2" style="color: var(--highlight-secondary);">Dano Real</h4>
+                        <p style="color: var(--text-muted);">Direção ofensiva é a chave. Capotou? Meteu a fuça no poste? Explodiu!</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-bg p-8 rounded-lg">
+                <h3 class="font-title text-3xl mb-6 section-title" style="color: var(--highlight-primary);">Modos de Jogo</h3>
+                <div class="space-y-8">
+                    <div>
+                        <h4 class="font-bold text-2xl" style="color: var(--highlight-secondary);">Corrida de Rua (Campanha — Bots / Local Coop / PVP)</h4>
+                        <p class="text-lg mt-2" style="color: var(--text-muted);">Uma jornada de 550 km pela Paraíba. Essas corridas vão do ponto A ao ponto B e seguem um percurso geográfico lógico do estado da Paraíba. Vencer desbloqueia novas rotas, modos e carros.</p>
+                        <div class="mt-4 pl-4 border-l-2" style="border-color: var(--border-color);">
+                            <h5 class="font-bold text-xl text-white">Rotas</h5>
+                            <ul class="list-disc list-inside ml-4" style="color: var(--text-muted);">
+                                <li>Parahyba (corte vertical)</li>
+                                <li>Bananeiras (corte vertical)</li>
+                                <li>Ingá (corte vertical)</li>
+                                <li>Campina Grande (disponível no alpha)</li>
+                                <li>Congo (disponível no alpha)</li>
+                                <li>Princesa Isabel (disponível no beta)</li>
+                                <li>Sousa (disponível no beta)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-2xl" style="color: var(--highlight-secondary);">Circuito (Bots / Local Coop / PVP)</h4>
+                        <p class="text-lg mt-2" style="color: var(--text-muted);">Poucas pistas circulares para corridas com voltas.</p>
+                        <div class="mt-4 pl-4 border-l-2" style="border-color: var(--border-color);">
+                            <h5 class="font-bold text-xl text-white">Rota</h5>
+                            <ul class="list-disc list-inside ml-4" style="color: var(--text-muted);">
+                                <li>BR-101 (disponível no alpha)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-2xl" style="color: var(--highlight-secondary);">Combate (Cooperativo/Competitivo Local)</h4>
+                        <p class="text-lg mt-2" style="color: var(--text-muted);">Até 4 jogadores em tela dividida. Escolha carros e arenas projetadas para batalhas armadas em modos Free-for-All, Duplas ou o caótico Evolve (1x3).</p>
+                         <div class="mt-4 pl-4 border-l-2" style="border-color: var(--border-color);">
+                            <h5 class="font-bold text-xl text-white">Arena</h5>
+                            <ul class="list-disc list-inside ml-4" style="color: var(--text-muted);">
+                                <li>Parque do Povo (disponível no beta)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-bg p-8 rounded-lg">
+                <h3 class="font-title text-4xl mb-4 text-center section-title center" style="color: var(--highlight-primary);">Jogos Correlatos</h3>
+                <div class="chart-container my-8">
                     <canvas id="competitorAnalysisChart"></canvas>
                 </div>
+                <div class="space-y-8 mt-12">
+                    <div class="bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                        <h4 class="font-bold text-2xl" style="color: var(--highlight-secondary);"><a href="https://youtu.be/s9qNnY1WJa4" target="_blank" class="hover:underline">RUSH 2049 (1999)</a></h4>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Referência:</strong> Adoção das mecânicas de circuito e combate veicular, além do design de pistas com múltiplos segredos e atalhos. A jogabilidade é puramente arcade.</p>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Diferença:</strong> OUSH PB 2076 se diferencia por uma direção de arte original e regional (glocal), em contraste com a estética futurista genérica de Rush. A trilha sonora, que funde rock e forró, também constitui um diferencial de identidade.</p>
+                    </div>
+                     <div class="bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                        <h4 class="font-bold text-2xl" style="color: var(--highlight-secondary);"><a href="https://youtu.be/5jXjlghaS68" target="_blank" class="hover:underline">DESTRUCTION DERBY (1995)</a></h4>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Referência:</strong> Implementação de um sistema de danos veiculares complexo e texturização low-poly como base estilística.</p>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Diferença:</strong> A jogabilidade de OUSH PB 2076 será fluida e responsiva, evitando a rigidez dos controles característicos de jogos da era MS-DOS.</p>
+                    </div>
+                     <div class="bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                        <h4 class="font-bold text-2xl" style="color: var(--highlight-secondary);"><a href="https://youtu.be/7JHxfFFBuOI" target="_blank" class="hover:underline">DIRT SHOWDOWN (2012)</a></h4>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Referência:</strong> Estrutura de level design, variedade de modos de jogo e a inclusão de um modo focado em destruição.</p>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Diferença:</strong> O projeto se afasta do realismo visual e de jogabilidade de Dirt, optando por uma abordagem estilizada e arcade.</p>
+                    </div>
+                    <div class="bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                        <h4 class="font-bold text-2xl" style="color: var(--highlight-secondary);"><a href="https://www.youtube.com/watch?v=zGpVuknnN78" target="_blank" class="hover:underline">FlatOut 2 (2006)</a></h4>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Referência:</strong> Foco na direção agressiva como mecânica central e um sistema de destruição que gera feedback satisfatório para o jogador.</p>
+                        <p class="text-lg mt-2" style="color: var(--text-light);"><strong style="color: var(--highlight-primary);">Diferença:</strong> OUSH PB 2076 se distingue por meio de uma identidade visual e sonora única, em oposição à estética e trilha sonora genéricas de FlatOut 2.</p>
+                    </div>
+                </div>
             </section>
-
         </main>
-
-        <!-- Footer -->
-    <footer class="mt-16 py-8 border-t border-t-gray-800">
-        <div class="container mx-auto px-6 text-center text-gray-400">
-            <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="text-lg hover:text-highlight transition-colors">
-                © 2025 Centro Comunitário-Criativo Poligonal.
-            </a>
-        </div>
-    </footer>
-
+        <footer class="mt-16 py-8 border-t" style="border-color: var(--border-color);">
+            <div class="container mx-auto px-6 text-center text-gray-400">
+                <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="text-lg hover:text-highlight transition-colors">
+                    © 2025 Centro Comunitário-Criativo Poligonal.
+                </a>
+            </div>
+        </footer>
     </div>
-
     <script>
-const tooltipTitleCallback = (tooltipItems) => {
-    const item = tooltipItems[0];
-    let label = item.chart.data.labels[item.dataIndex];
-    return Array.isArray(label) ? label.join(' ') : label;
-};
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- LÓGICA DO GRÁFICO (USA A PALETA ASFALTO E NEON) ---
+        const palette = {
+            '--text-light': '#FFFFFF',
+            '--text-muted': '#9D50B3',
+            '--highlight-primary': '#5A9DC3',
+            '--highlight-secondary': '#B40000',
+            '--border-color': 'rgba(90, 157, 195, 0.5)',
+        };
 
-const competitorAnalysisCtx = document.getElementById('competitorAnalysisChart').getContext('2d');
-new Chart(competitorAnalysisCtx, {
-    type: 'radar',
-    data: {
-        labels: [['Jogabilidade', 'arcade'], ['Combate', 'veícular  '], ['Pistas com', 'segredos'], ['Estética', 'Retrô'], 'Customização'],
-        datasets: [
-        {
-            label: 'OUSH Parahyba',
-            data: [9, 7, 10, 10, 4],
-            backgroundColor: 'rgba(255, 0, 110, 0.25)',
-            borderColor: '#ff006e',
-            pointBackgroundColor: '#ff006e',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: '#ff006e'
-        },
-        {
-            label: 'Rush 2049',
-            data: [10, 7, 10, 8, 7],
-            backgroundColor: 'rgba(255, 190, 11, 0.2)',
-            borderColor: '#ffbe0b',
-            pointBackgroundColor: '#ffbe0b',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: '#ffbe0b'
-        },
-        {
-            label: 'Destruction Derby',
-            data: [6, 10, 4, 7, 3],
-            backgroundColor: 'rgba(200, 200, 200, 0.2)',
-            borderColor: '#c8c8c8',
-            pointBackgroundColor: '#c8c8c8',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: '#c8c8c8'
-        },
-        {
-            label: 'Dirt Showdown',
-            data: [4, 9, 6, 4, 7],
-            backgroundColor: 'rgba(0, 255, 255, 0.2)',
-            borderColor: '#00ffff',
-            pointBackgroundColor: '#00ffff',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: '#00ffff'
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            r: {
-                angleLines: { color: 'rgba(131, 56, 236, 0.2)' },
-                grid: { color: 'rgba(131, 56, 236, 0.2)' },
-                pointLabels: {
-                     color: '#e0e0e0',
-                    font: { family: "'Quantico', sans-serif", size: 16 }
-                },
-                ticks: {
-                    color: '#a0a0a0',
-                    backdropColor: 'rgba(0,0,0,0.8)',
-                    stepSize: 2,
-                    font: { family: "'Quantico', sans-serif", size: 12 }
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'top',
-                 labels: {
-                    color: '#d1d5db',
-                    font: { family: "'Quantico', sans-serif", size: 14 }
-                }
+        const competitorAnalysisCtx = document.getElementById('competitorAnalysisChart').getContext('2d');
+        new Chart(competitorAnalysisCtx, {
+            type: 'radar',
+            data: {
+                labels: [['Jogabilidade', 'arcade'], ['Combate', 'veicular'], ['Pistas com', 'segredos'], ['Estética', 'Retrô'], 'Customização'],
+                datasets: [{
+                    label: 'OUSH Parahyba',
+                    data: [9, 7, 10, 10, 4],
+                    backgroundColor: `${palette['--highlight-secondary']}33`,
+                    borderColor: palette['--highlight-secondary'],
+                    pointBackgroundColor: palette['--highlight-secondary'],
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: palette['--highlight-secondary']
+                }, {
+                    label: 'Rush 2049',
+                    data: [10, 7, 10, 8, 7],
+                    backgroundColor: `${palette['--highlight-primary']}40`,
+                    borderColor: palette['--highlight-primary'],
+                    pointBackgroundColor: palette['--highlight-primary'],
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: palette['--highlight-primary']
+                }, {
+                    label: 'Destruction Derby',
+                    data: [6, 10, 4, 7, 3],
+                    backgroundColor: `${palette['--text-muted']}33`,
+                    borderColor: palette['--text-muted'],
+                    pointBackgroundColor: palette['--text-muted'],
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: palette['--text-muted']
+                }, { 
+                    label: 'Dirt Showdown',
+                    data: [4, 9, 6, 4, 7],
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    borderColor: '#FFFFFF',
+                    pointBackgroundColor: '#FFFFFF',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#FFFFFF'
+                }, { 
+                    label: 'FlatOut 2',
+                    data: [9, 10, 6, 3, 5],
+                    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                    borderColor: '#22c55e',
+                    pointBackgroundColor: '#22c55e',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#22c55e'
+                }]
             },
-            tooltip: {
-                callbacks: { title: tooltipTitleCallback }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: `${palette['--border-color']}` },
+                        grid: { color: `${palette['--border-color']}` },
+                        pointLabels: {
+                            color: palette['--text-light'],
+                            font: { family: "'Quantico', sans-serif", size: 16 }
+                        },
+                        ticks: {
+                            color: palette['--text-muted'],
+                            backdropColor: 'rgba(0,0,0,0.8)',
+                            stepSize: 2,
+                            font: { family: "'Quantico', sans-serif", size: 12 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: palette['--text-light'],
+                            font: { family: "'Quantico', sans-serif", size: 14 }
+                        }
+                    },
+                    tooltip: { 
+                        callbacks: { 
+                            title: (tooltipItems) => {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                return Array.isArray(label) ? label.join(' ') : label;
+                            }
+                        } 
+                    }
+                }
             }
-        }
-    }
-});
-</script>
-
-
+        });
+    });
+    </script>
 </body>
 </html>
