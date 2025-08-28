@@ -10,22 +10,35 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
     <style>
-        /* Paleta Final: Corporativo */
+        /* Paleta Padrão (Modo Claro) */
         :root {
             --bg-main: #F3F4F6; /* Cinza claro */
             --bg-card: #FFFFFF;
             --text-light: #1F2937; /* Cinza escuro */
             --text-muted: #4B5563;
-            --highlight-primary: #00973E; /* Verde Petrobras */
-            --highlight-secondary: #FFDE00; /* Amarelo Petrobras */
-            --highlight-tertiary: #002A50; /* Azul Petrobras */
+            --highlight-primary: #002A50; /* Era Verde, agora Azul Escuro */
+            --highlight-secondary: #00973E; /* Era Amarelo, agora Verde */
+            --highlight-tertiary: #002A50; /* Azul Escuro */
             --border-color: #D1D5DB;
+        }
+
+        /* Paleta Modo Escuro */
+        .dark {
+            --bg-main: #002A50;
+            --bg-card: #003D73;
+            --text-light: #E2E8F0;
+            --text-muted: #A0AEC0;
+            --highlight-primary: #FFFFFF; /* Era Verde, agora Branco (representando o papel do azul) */
+            --highlight-secondary: #00973E; /* Era Amarelo, agora Verde */
+            --highlight-tertiary: #FFFFFF; /* Era Branco, continua Branco */
+            --border-color: #004E8A;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-light);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .font-title {
@@ -112,9 +125,33 @@
             height: 400px;
             max-height: 500px;
         }
+        
+        #darkModeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
-<body>
+<body class="dark">
+    <button id="darkModeToggle" aria-label="Alternar modo escuro">
+        <!-- Ícone de Sol (visível no modo escuro) -->
+        <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="color: var(--highlight-secondary);">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.95a1 1 0 001.414 1.414l.707-.707a1 1 0 00-1.414-1.414l-.707.707zm-2.12-10.607a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z" clip-rule="evenodd" />
+        </svg>
+        <!-- Ícone de Lua (visível no modo claro) -->
+        <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor" style="color: var(--highlight-tertiary);">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        </svg>
+    </button>
+
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center my-24">
             <div id="title-container">
@@ -138,11 +175,11 @@
             <section class="card-bg p-8">
                 <h3 class="font-title text-3xl mb-6 section-title" style="color: var(--highlight-primary);">Público e Plataformas</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                    <div class="bg-gray-50 p-6 rounded-lg text-center border" style="border-color: var(--border-color);">
+                    <div class="bg-gray-50 dark:bg-black/20 p-6 rounded-lg text-center border" style="border-color: var(--border-color);">
                         <p class="font-semibold text-lg uppercase tracking-widest" style="color: var(--text-muted);">Classificação</p>
-                        <p class="font-title text-7xl" style="color: var(--highlight-secondary);">Livre</p>
+                        <p class="font-title text-7xl" style="color: var(--highlight-secondary);">12+</p>
                     </div>
-                    <div class="bg-gray-50 p-6 rounded-lg text-center border" style="border-color: var(--border-color);">
+                    <div class="bg-gray-50 dark:bg-black/20 p-6 rounded-lg text-center border" style="border-color: var(--border-color);">
                         <p class="font-semibold text-lg uppercase tracking-widest" style="color: var(--text-muted);">Plataforma</p>
                         <p class="font-title text-7xl" style="color: var(--highlight-secondary);">PC</p>
                     </div>
@@ -238,22 +275,22 @@
                     <canvas id="competitorAnalysisChart"></canvas>
                 </div>
                 <div class="space-y-8 mt-12">
-                    <div class="bg-gray-50 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                    <div class="bg-gray-50 dark:bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
                         <h4 class="font-bold text-2xl" style="color: var(--highlight-tertiary);"><a href="https://youtu.be/s9qNnY1WJa4" target="_blank" class="hover:underline">RUSH 2049 (1999)</a></h4>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Referência:</strong> Adoção das mecânicas de circuito e combate veicular, além do design de pistas com múltiplos segredos e atalhos. A jogabilidade é puramente arcade.</p>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Diferença:</strong> OUSH NORDESTE 2076 se diferencia por uma direção de arte original e regional (glocal), em contraste com a estética futurista genérica de Rush. A trilha sonora, que funde rock e forró, também constitui um diferencial de identidade.</p>
                     </div>
-                     <div class="bg-gray-50 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                     <div class="bg-gray-50 dark:bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
                         <h4 class="font-bold text-2xl" style="color: var(--highlight-tertiary);"><a href="https://youtu.be/5jXjlghaS68" target="_blank" class="hover:underline">DESTRUCTION DERBY (1995)</a></h4>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Referência:</strong> Implementação de um sistema de danos veiculares complexo e texturização low-poly como base estilística.</p>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Diferença:</strong> A jogabilidade de OUSH NORDESTE 2076 será fluida e responsiva, evitando a rigidez dos controles característicos de jogos da era MS-DOS.</p>
                     </div>
-                     <div class="bg-gray-50 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                     <div class="bg-gray-50 dark:bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
                         <h4 class="font-bold text-2xl" style="color: var(--highlight-tertiary);"><a href="https://youtu.be/7JHxfFFBuOI" target="_blank" class="hover:underline">DIRT SHOWDOWN (2012)</a></h4>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Referência:</strong> Estrutura de level design, variedade de modos de jogo e a inclusão de um modo focado em destruição.</p>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Diferença:</strong> O projeto se afasta do realismo visual e de jogabilidade de Dirt, optando por uma abordagem estilizada e arcade.</p>
                     </div>
-                    <div class="bg-gray-50 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
+                    <div class="bg-gray-50 dark:bg-black/20 border-l-4 p-4 rounded-r-lg" style="border-color: var(--highlight-secondary);">
                         <h4 class="font-bold text-2xl" style="color: var(--highlight-tertiary);"><a href="https://www.youtube.com/watch?v=zGpVuknnN78" target="_blank" class="hover:underline">FlatOut 2 (2006)</a></h4>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Referência:</strong> Foco na direção agressiva como mecânica central e um sistema de destruição que gera feedback satisfatório para o jogador.</p>
                         <p class="text-lg mt-2" style="color: var(--text-muted);"><strong style="color: var(--highlight-primary);">Diferença:</strong> OUSH NORDESTE 2076 se distingue por meio de uma identidade visual e sonora única, em oposição à estética e trilha sonora genéricas de FlatOut 2.</p>
@@ -271,111 +308,146 @@
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const root = document.documentElement;
+        const body = document.body;
+        const toggleButton = document.getElementById('darkModeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        let competitorChart; // Variável para guardar a instância do gráfico
 
+        // Função para obter as cores atuais do tema
         const getChartColors = () => ({
-            'text-light': getComputedStyle(root).getPropertyValue('--text-light').trim(),
-            'text-muted': getComputedStyle(root).getPropertyValue('--text-muted').trim(),
-            'highlight-primary': getComputedStyle(root).getPropertyValue('--highlight-primary').trim(),
-            'highlight-secondary': getComputedStyle(root).getPropertyValue('--highlight-secondary').trim(),
-            'highlight-tertiary': getComputedStyle(root).getPropertyValue('--highlight-tertiary').trim(),
-            'border-color': getComputedStyle(root).getPropertyValue('--border-color').trim(),
-            'bg-card': getComputedStyle(root).getPropertyValue('--bg-card').trim(),
+            'text-light': getComputedStyle(body).getPropertyValue('--text-light').trim(),
+            'text-muted': getComputedStyle(body).getPropertyValue('--text-muted').trim(),
+            'highlight-primary': getComputedStyle(body).getPropertyValue('--highlight-primary').trim(),
+            'highlight-secondary': getComputedStyle(body).getPropertyValue('--highlight-secondary').trim(),
+            'highlight-tertiary': getComputedStyle(body).getPropertyValue('--highlight-tertiary').trim(),
+            'border-color': getComputedStyle(body).getPropertyValue('--border-color').trim(),
+            'bg-card': getComputedStyle(body).getPropertyValue('--bg-card').trim(),
         });
+        
+        // Função para atualizar as cores do gráfico
+        const updateChartColors = () => {
+            if (!competitorChart) return;
+            const colors = getChartColors();
+            
+            const chartOptions = competitorChart.options;
+            chartOptions.scales.r.angleLines.color = colors['border-color'];
+            chartOptions.scales.r.grid.color = colors['border-color'];
+            chartOptions.scales.r.pointLabels.color = colors['text-light'];
+            chartOptions.scales.r.ticks.color = colors['text-muted'];
+            chartOptions.scales.r.ticks.backdropColor = `${colors['bg-card']}B3`;
+            chartOptions.plugins.legend.labels.color = colors['text-light'];
+            
+            competitorChart.update();
+        };
 
-        const competitorAnalysisCtx = document.getElementById('competitorAnalysisChart').getContext('2d');
-        const colors = getChartColors();
+        // Função para alternar o modo e os ícones
+        const toggleMode = () => {
+            body.classList.toggle('dark');
+            sunIcon.classList.toggle('hidden');
+            moonIcon.classList.toggle('hidden');
+            updateChartColors(); // Atualiza o gráfico sempre que o tema muda
+        };
+        
+        // Define o estado inicial dos ícones baseado no modo inicial
+        if (body.classList.contains('dark')) {
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        } else {
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+        }
 
-        new Chart(competitorAnalysisCtx, {
-            type: 'radar',
-            data: {
-                labels: [['Jogabilidade', 'Arcade'], ['Combate', 'Veicular'], ['Pistas com', 'Segredos'], ['Estética', 'Retrô'], 'Customização'],
-                datasets: [{
-                    label: 'OUSH NORDESTE',
-                    data: [9, 7, 10, 10, 4],
-                    backgroundColor: `${colors['highlight-primary']}33`,
-                    borderColor: colors['highlight-primary'],
-                    pointBackgroundColor: colors['highlight-primary'],
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: colors['highlight-primary']
-                }, {
-                    label: 'Rush 2049',
-                    data: [10, 7, 10, 8, 7],
-                    backgroundColor: `${colors['highlight-tertiary']}33`,
-                    borderColor: colors['highlight-tertiary'],
-                    pointBackgroundColor: colors['highlight-tertiary'],
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: colors['highlight-tertiary']
-                }, {
-                    label: 'Destruction Derby',
-                    data: [6, 10, 4, 7, 3],
-                    backgroundColor: `${colors['text-muted']}4D`, // 30% opacity
-                    borderColor: colors['text-muted'],
-                    pointBackgroundColor: colors['text-muted'],
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: colors['text-muted']
-                }, {
-                    label: 'Dirt Showdown',
-                    data: [4, 9, 6, 4, 7],
-                    backgroundColor: `rgba(234, 179, 8, 0.2)`,
-                    borderColor: `rgba(234, 179, 8, 1)`,
-                    pointBackgroundColor: `rgba(234, 179, 8, 1)`,
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: `rgba(234, 179, 8, 1)`
-                }, {
-                    label: 'FlatOut 2',
-                    data: [9, 10, 6, 3, 5],
-                    backgroundColor: `rgba(220, 38, 38, 0.2)`,
-                    borderColor: `rgba(220, 38, 38, 1)`,
-                    pointBackgroundColor: `rgba(220, 38, 38, 1)`,
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: `rgba(220, 38, 38, 1)`
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: colors['border-color'] },
-                        grid: { color: colors['border-color'] },
-                        pointLabels: {
-                            color: colors['text-light'],
-                            font: { family: "'Poppins', sans-serif", size: 14 }
-                        },
-                        ticks: {
-                            color: colors['text-muted'],
-                            backdropColor: `${colors['bg-card']}B3`, // 70% opacity
-                            stepSize: 2,
-                            font: { family: "'Roboto Mono', monospace", size: 12 }
-                        }
-                    }
+        toggleButton.addEventListener('click', toggleMode);
+
+        // Função para criar o gráfico
+        const createChart = () => {
+            const colors = getChartColors();
+            const competitorAnalysisCtx = document.getElementById('competitorAnalysisChart').getContext('2d');
+            
+            competitorChart = new Chart(competitorAnalysisCtx, {
+                type: 'radar',
+                data: {
+                    labels: [['Jogabilidade', 'Arcade'], ['Combate', 'Veicular'], ['Pistas com', 'Segredos'], ['Estética', 'Retrô'], 'Customização'],
+                    datasets: [{
+                        label: 'OUSH NORDESTE',
+                        data: [9, 7, 10, 10, 4],
+                        backgroundColor: `${colors['highlight-primary']}33`,
+                        borderColor: colors['highlight-primary'],
+                        pointBackgroundColor: colors['highlight-primary'],
+                        pointBorderColor: '#fff',
+                    }, {
+                        label: 'Rush 2049',
+                        data: [10, 7, 10, 8, 7],
+                        backgroundColor: `${colors['highlight-tertiary']}33`,
+                        borderColor: colors['highlight-tertiary'],
+                        pointBackgroundColor: colors['highlight-tertiary'],
+                        pointBorderColor: '#fff',
+                    }, {
+                        label: 'Destruction Derby',
+                        data: [6, 10, 4, 7, 3],
+                        backgroundColor: `${colors['text-muted']}4D`,
+                        borderColor: colors['text-muted'],
+                        pointBackgroundColor: colors['text-muted'],
+                        pointBorderColor: '#fff',
+                    }, {
+                        label: 'Dirt Showdown',
+                        data: [4, 9, 6, 4, 7],
+                        backgroundColor: `rgba(234, 179, 8, 0.2)`,
+                        borderColor: `rgba(234, 179, 8, 1)`,
+                        pointBackgroundColor: `rgba(234, 179, 8, 1)`,
+                        pointBorderColor: '#fff',
+                    }, {
+                        label: 'FlatOut 2',
+                        data: [9, 10, 6, 3, 5],
+                        backgroundColor: `rgba(220, 38, 38, 0.2)`,
+                        borderColor: `rgba(220, 38, 38, 1)`,
+                        pointBackgroundColor: `rgba(220, 38, 38, 1)`,
+                        pointBorderColor: '#fff',
+                    }]
                 },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            color: colors['text-light'],
-                            font: { family: "'Poppins', sans-serif", size: 14 }
-                        }
-                    },
-                    tooltip: {
-                         callbacks: {
-                             title: (tooltipItems) => {
-                                const item = tooltipItems[0];
-                                let label = item.chart.data.labels[item.dataIndex];
-                                return Array.isArray(label) ? label.join(' ') : label;
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: colors['border-color'] },
+                            grid: { color: colors['border-color'] },
+                            pointLabels: {
+                                color: colors['text-light'],
+                                font: { family: "'Poppins', sans-serif", size: 14 }
+                            },
+                            ticks: {
+                                color: colors['text-muted'],
+                                backdropColor: `${colors['bg-card']}B3`,
+                                stepSize: 2,
+                                font: { family: "'Roboto Mono', monospace", size: 12 }
                             }
                         }
-                     }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: colors['text-light'],
+                                font: { family: "'Poppins', sans-serif", size: 14 }
+                            }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                 title: (tooltipItems) => {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    return Array.isArray(label) ? label.join(' ') : label;
+                                }
+                            }
+                         }
+                    }
                 }
-            }
-        });
+            });
+        };
+
+        createChart();
     });
     </script>
 </body>
