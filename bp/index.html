@@ -1,0 +1,630 @@
+<!-- 
+=========================================
+SUMÁRIO DO ARQUIVO
+=========================================
+
+[CATEGORIA: HTML CONFIG]
+- Cabeçalho e Importações
+
+[CATEGORIA: ESTILOS CSS]
+- Layout Global
+- Estilos dos Nós (Nodes)
+- Estilos dos Pinos e Conexões
+
+[CATEGORIA: ESTRUTURA DOM]
+- Área de Trabalho e SVG
+
+[CATEGORIA: DADOS JS]
+- Definição de Nós
+- Definição de Conexões
+
+[CATEGORIA: LÓGICA JS]
+- Variáveis de Estado
+- Geração do DOM
+- Renderização de Linhas (SVG)
+
+[CATEGORIA: INTERATIVIDADE JS]
+- Eventos de Mouse e Drag
+
+[CATEGORIA: INICIALIZAÇÃO JS]
+- Chamada de Funções Base
+=========================================
+-->
+
+<!-- ========================================= -->
+<!-- [CATEGORIA: HTML CONFIG]                  -->
+<!-- Cabeçalho e Importações                   -->
+<!-- ========================================= -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Node Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+/* ========================================= */
+/* [CATEGORIA: ESTILOS CSS]                  */
+/* Layout Global                             */
+/* ========================================= */
+        body {
+            margin: 0;
+            background-color: #1a1a1c;
+            color: #d1d1d1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        #workspace {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            transform-origin: 0 0;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+
+        #connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: visible;
+        }
+
+        #selection-box {
+            position: absolute;
+            border: 1px dashed #d07c00;
+            background-color: rgba(208, 124, 0, 0.1);
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+        }
+
+
+/* ========================================= */
+/* [CATEGORIA: ESTILOS CSS]                  */
+/* Estilos dos Nós (Nodes)                   */
+/* ========================================= */
+        .node {
+            position: absolute;
+            background: rgba(16, 16, 16, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.8);
+            border: 1px solid #111;
+            min-width: 160px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            cursor: default;
+            backdrop-filter: blur(4px);
+        }
+        
+        .node.selected {
+            border: 1px solid #d07c00;
+            box-shadow: 0 0 8px rgba(208, 124, 0, 0.6), 0 4px 8px rgba(0,0,0,0.8);
+        }
+
+        .node-header {
+            padding: 8px 12px;
+            font-weight: 600;
+            font-size: 13px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.5);
+        }
+
+        .header-event { background: linear-gradient(to right, rgba(145,0,0,0.8), rgba(92,0,0,0.8)); }
+        .header-function { background: linear-gradient(to right, rgba(0,86,145,0.8), rgba(0,54,92,0.8)); }
+        .header-pure { background: linear-gradient(to right, rgba(65,117,5,0.8), rgba(41,74,3,0.8)); }
+        .header-macro { background: linear-gradient(to right, rgba(122,122,122,0.8), rgba(74,74,74,0.8)); }
+        .header-cast { background: linear-gradient(to right, rgba(0,124,124,0.8), rgba(0,77,77,0.8)); }
+
+        .node-body {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+/* ========================================= */
+/* [CATEGORIA: ESTILOS CSS]                  */
+/* Estilos dos Pinos e Conexões              */
+/* ========================================= */
+        .pin-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .pin-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            height: 20px;
+        }
+
+        .pin-row.right {
+            flex-direction: row-reverse;
+        }
+
+        .pin {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            position: relative;
+            cursor: crosshair;
+            border: 1.5px solid transparent;
+        }
+        
+        .pin:hover {
+            transform: scale(1.2);
+        }
+
+        .pin-exec { border-radius: 0; width: 12px; height: 14px; clip-path: polygon(0 0, 60% 0, 100% 50%, 60% 100%, 0 100%); background-color: #fff; }
+        .pin-object { background-color: #00a8ff; border-color: #00a8ff; }
+        .pin-bool { background-color: #ff0000; border-color: #ff0000; }
+        .pin-int { background-color: #00ff00; border-color: #00ff00; }
+        .pin-vector { background-color: #ffcc00; border-color: #ffcc00; }
+        .pin-struct { background-color: #0033ff; border-color: #0033ff; }
+
+        .pin-empty:not(.pin-exec) { background-color: transparent !important; }
+
+        .path-exec { stroke: #fff; stroke-width: 4; fill: none; }
+        .path-object { stroke: #00a8ff; stroke-width: 2.5; fill: none; }
+        .path-bool { stroke: #ff0000; stroke-width: 2.5; fill: none; }
+        .path-active { stroke: #d1d1d1; stroke-width: 2.5; fill: none; stroke-dasharray: 5,5; }
+    </style>
+</head>
+<body>
+
+<!-- ========================================= -->
+<!-- [CATEGORIA: ESTRUTURA DOM]                -->
+<!-- Área de Trabalho e SVG                    -->
+<!-- ========================================= -->
+    <div id="workspace">
+        <svg id="connections">
+            <path id="active-connection" class="path-active" d=""></path>
+        </svg>
+        <div id="selection-box"></div>
+    </div>
+
+    <script>
+
+/* ========================================= */
+/* [CATEGORIA: DADOS JS]                     */
+/* Definição de Nós                          */
+/* ========================================= */
+        const nodesData = [
+            {
+                id: 'node1',
+                title: 'On Component Begin Overlap (Box)',
+                type: 'event',
+                x: 50, y: 50,
+                inputs: [],
+                outputs: [
+                    { id: 'n1_out_exec', name: '', type: 'exec' },
+                    { id: 'n1_out_comp', name: 'Overlapped Component', type: 'object' },
+                    { id: 'n1_out_actor', name: 'Other Actor', type: 'object' },
+                    { id: 'n1_out_othercomp', name: 'Other Comp', type: 'object' },
+                    { id: 'n1_out_body', name: 'Other Body Index', type: 'int' },
+                    { id: 'n1_out_sweep', name: 'From Sweep', type: 'bool' },
+                    { id: 'n1_out_result', name: 'Sweep Result', type: 'struct' }
+                ]
+            },
+            {
+                id: 'node2',
+                title: 'Get Player Pawn',
+                type: 'pure',
+                x: 80, y: 350,
+                inputs: [
+                    { id: 'n2_in_idx', name: 'Player Index', type: 'int', val: '0' }
+                ],
+                outputs: [
+                    { id: 'n2_out_val', name: 'Return Value', type: 'object' }
+                ]
+            },
+            {
+                id: 'node3',
+                title: '==',
+                type: 'macro',
+                x: 400, y: 150,
+                inputs: [
+                    { id: 'n3_in_a', name: '', type: 'object' },
+                    { id: 'n3_in_b', name: '', type: 'object' }
+                ],
+                outputs: [
+                    { id: 'n3_out_res', name: '', type: 'bool' }
+                ]
+            },
+            {
+                id: 'node4',
+                title: 'Branch',
+                type: 'macro',
+                x: 550, y: 80,
+                inputs: [
+                    { id: 'n4_in_exec', name: '', type: 'exec' },
+                    { id: 'n4_in_cond', name: 'Condition', type: 'bool' }
+                ],
+                outputs: [
+                    { id: 'n4_out_true', name: 'True', type: 'exec' },
+                    { id: 'n4_out_false', name: 'False', type: 'exec' }
+                ]
+            },
+            {
+                id: 'node5',
+                title: 'Cast To Character',
+                type: 'cast',
+                x: 400, y: 400,
+                inputs: [
+                    { id: 'n5_in_exec', name: '', type: 'exec' },
+                    { id: 'n5_in_obj', name: 'Object', type: 'object' }
+                ],
+                outputs: [
+                    { id: 'n5_out_exec', name: '', type: 'exec' },
+                    { id: 'n5_out_fail', name: 'Cast Failed', type: 'exec' },
+                    { id: 'n5_out_char', name: 'As Character', type: 'object' }
+                ]
+            },
+            {
+                id: 'node6',
+                title: 'Launch Character',
+                type: 'function',
+                x: 750, y: 250,
+                inputs: [
+                    { id: 'n6_in_exec', name: '', type: 'exec' },
+                    { id: 'n6_in_target', name: 'Target', type: 'object' },
+                    { id: 'n6_in_vel', name: 'Launch Velocity', type: 'vector', val: 'X 0.0 Y 0.0 Z 0.0' },
+                    { id: 'n6_in_xy', name: 'XYOverride', type: 'bool' },
+                    { id: 'n6_in_z', name: 'ZOverride', type: 'bool' }
+                ],
+                outputs: [
+                    { id: 'n6_out_exec', name: '', type: 'exec' }
+                ]
+            }
+        ];
+
+/* ========================================= */
+/* [CATEGORIA: DADOS JS]                     */
+/* Definição de Conexões                     */
+/* ========================================= */
+        const linksData = [
+            { from: 'n1_out_actor', to: 'n3_in_a', type: 'object' },
+            { from: 'n2_out_val', to: 'n3_in_b', type: 'object' },
+            { from: 'n3_out_res', to: 'n4_in_cond', type: 'bool' },
+            { from: 'n1_out_exec', to: 'n4_in_exec', type: 'exec' },
+            { from: 'n4_out_true', to: 'n5_in_exec', type: 'exec' },
+            { from: 'n2_out_val', to: 'n5_in_obj', type: 'object' },
+            { from: 'n5_out_exec', to: 'n6_in_exec', type: 'exec' },
+            { from: 'n5_out_char', to: 'n6_in_target', type: 'object' }
+        ];
+
+/* ========================================= */
+/* [CATEGORIA: LÓGICA JS]                    */
+/* Variáveis de Estado                       */
+/* ========================================= */
+        const workspace = document.getElementById('workspace');
+        const svgLayer = document.getElementById('connections');
+        const activePath = document.getElementById('active-connection');
+        const selectionBox = document.getElementById('selection-box');
+        
+        let panX = 0, panY = 0;
+        let zoom = 1;
+        let isPanning = false;
+        
+        let selectedNodes = new Set();
+        let isDraggingNodes = false;
+        
+        let isSelecting = false;
+        let selStartX = 0, selStartY = 0;
+        
+        let isConnecting = false;
+        let sourcePin = null;
+        
+        let startX, startY;
+
+        function updateWorkspaceTransform() {
+            workspace.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+        }
+
+        function clearSelection() {
+            selectedNodes.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.remove('selected');
+            });
+            selectedNodes.clear();
+        }
+
+        function updatePinVisuals() {
+            document.querySelectorAll('.pin').forEach(pin => pin.classList.add('pin-empty'));
+            linksData.forEach(link => {
+                const p1 = document.getElementById(link.from);
+                const p2 = document.getElementById(link.to);
+                if (p1) p1.classList.remove('pin-empty');
+                if (p2) p2.classList.remove('pin-empty');
+            });
+        }
+
+/* ========================================= */
+/* [CATEGORIA: LÓGICA JS]                    */
+/* Geração do DOM                            */
+/* ========================================= */
+        function createDOM() {
+            nodesData.forEach(node => {
+                const nodeEl = document.createElement('div');
+                nodeEl.className = 'node';
+                nodeEl.id = node.id;
+                nodeEl.style.left = node.x + 'px';
+                nodeEl.style.top = node.y + 'px';
+
+                nodeEl.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    e.stopPropagation();
+                    
+                    if (!e.shiftKey && !e.ctrlKey && !selectedNodes.has(node.id)) {
+                        clearSelection();
+                    }
+                    
+                    selectedNodes.add(node.id);
+                    nodeEl.classList.add('selected');
+                    
+                    isDraggingNodes = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                });
+
+                let inHTML = node.inputs.map(p => `
+                    <div class="pin-row">
+                        <div class="pin pin-${p.type} pin-empty" id="${p.id}" data-type="${p.type}"></div>
+                        <span>${p.name} ${p.val ? `<span class="text-gray-400">[${p.val}]</span>` : ''}</span>
+                    </div>
+                `).join('');
+
+                let outHTML = node.outputs.map(p => `
+                    <div class="pin-row right">
+                        <div class="pin pin-${p.type} pin-empty" id="${p.id}" data-type="${p.type}"></div>
+                        <span>${p.name}</span>
+                    </div>
+                `).join('');
+
+                nodeEl.innerHTML = `
+                    <div class="node-header header-${node.type}">
+                        ${node.type === 'event' ? '<span class="text-red-400" style="transform: rotate(45deg); display: inline-block; width: 12px; height: 12px; background: currentColor;"></span>' : ''}
+                        ${node.type === 'function' ? '<span class="text-blue-300 font-serif italic text-lg">ƒ</span>' : ''}
+                        ${node.title}
+                    </div>
+                    <div class="node-body">
+                        <div class="pin-list">${inHTML}</div>
+                        <div class="pin-list items-end">${outHTML}</div>
+                    </div>
+                `;
+
+                workspace.appendChild(nodeEl);
+            });
+
+            document.querySelectorAll('.pin').forEach(pin => {
+                pin.addEventListener('mousedown', (e) => {
+                    e.stopPropagation();
+                    if (e.button !== 0) return;
+
+                    isConnecting = true;
+                    sourcePin = pin;
+                    activePath.setAttribute('class', `path-${pin.dataset.type} path-active`);
+                });
+
+                pin.addEventListener('dblclick', (e) => {
+                    e.stopPropagation();
+                    linksData = linksData.filter(l => l.from !== pin.id && l.to !== pin.id);
+                    drawLinks();
+                });
+
+                pin.addEventListener('mouseup', (e) => {
+                    e.stopPropagation();
+                    if (isConnecting && sourcePin && sourcePin.id !== pin.id && sourcePin.dataset.type === pin.dataset.type) {
+                        linksData.push({ from: sourcePin.id, to: pin.id, type: pin.dataset.type });
+                        drawLinks();
+                    }
+                    isConnecting = false;
+                    activePath.setAttribute('d', '');
+                });
+            });
+        }
+
+/* ========================================= */
+/* [CATEGORIA: LÓGICA JS]                    */
+/* Renderização de Linhas (SVG)              */
+/* ========================================= */
+        function drawLinks() {
+            Array.from(svgLayer.children).forEach(child => {
+                if (child.id !== 'active-connection') child.remove();
+            });
+            
+            linksData.forEach(link => {
+                const p1 = document.getElementById(link.from);
+                const p2 = document.getElementById(link.to);
+                
+                if (!p1 || !p2) return;
+
+                const r1 = p1.getBoundingClientRect();
+                const r2 = p2.getBoundingClientRect();
+
+                const x1 = (r1.left - panX) / zoom + (r1.width / zoom) / 2;
+                const y1 = (r1.top - panY) / zoom + (r1.height / zoom) / 2;
+                const x2 = (r2.left - panX) / zoom + (r2.width / zoom) / 2;
+                const y2 = (r2.top - panY) / zoom + (r2.height / zoom) / 2;
+
+                const dx = Math.abs(x2 - x1) * 0.5;
+                const cp1x = x1 + Math.max(dx, 30);
+                const cp1y = y1;
+                const cp2x = x2 - Math.max(dx, 30);
+                const cp2y = y2;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
+                path.setAttribute('class', `path-${link.type}`);
+                svgLayer.insertBefore(path, activePath);
+            });
+            updatePinVisuals();
+        }
+
+/* ========================================= */
+/* [CATEGORIA: INTERATIVIDADE JS]            */
+/* Eventos de Mouse e Drag                   */
+/* ========================================= */
+        window.addEventListener('mousedown', (e) => {
+            if (e.button === 1) { 
+                isPanning = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                document.body.style.cursor = 'grabbing';
+                e.preventDefault();
+            } else if (e.button === 0 && (e.target === document.body || e.target.id === 'workspace' || e.target.id === 'connections')) {
+                if (!e.shiftKey) clearSelection();
+                isSelecting = true;
+                selStartX = (e.clientX - panX) / zoom;
+                selStartY = (e.clientY - panY) / zoom;
+                selectionBox.style.display = 'block';
+                selectionBox.style.left = selStartX + 'px';
+                selectionBox.style.top = selStartY + 'px';
+                selectionBox.style.width = '0px';
+                selectionBox.style.height = '0px';
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isPanning) {
+                panX += e.clientX - startX;
+                panY += e.clientY - startY;
+                startX = e.clientX;
+                startY = e.clientY;
+                updateWorkspaceTransform();
+                return;
+            }
+
+            if (isDraggingNodes) {
+                const dx = (e.clientX - startX) / zoom;
+                const dy = (e.clientY - startY) / zoom;
+                
+                selectedNodes.forEach(id => {
+                    const el = document.getElementById(id);
+                    const currentX = parseFloat(el.style.left);
+                    const currentY = parseFloat(el.style.top);
+                    el.style.left = (currentX + dx) + 'px';
+                    el.style.top = (currentY + dy) + 'px';
+                });
+                
+                startX = e.clientX;
+                startY = e.clientY;
+                drawLinks();
+                return;
+            }
+
+            if (isSelecting) {
+                const currentX = (e.clientX - panX) / zoom;
+                const currentY = (e.clientY - panY) / zoom;
+                
+                const minX = Math.min(selStartX, currentX);
+                const minY = Math.min(selStartY, currentY);
+                const maxX = Math.max(selStartX, currentX);
+                const maxY = Math.max(selStartY, currentY);
+                
+                selectionBox.style.left = minX + 'px';
+                selectionBox.style.top = minY + 'px';
+                selectionBox.style.width = (maxX - minX) + 'px';
+                selectionBox.style.height = (maxY - minY) + 'px';
+
+                nodesData.forEach(node => {
+                    const el = document.getElementById(node.id);
+                    const r = el.getBoundingClientRect();
+                    const nx = (r.left - panX) / zoom;
+                    const ny = (r.top - panY) / zoom;
+                    const nWidth = r.width / zoom;
+                    const nHeight = r.height / zoom;
+                    
+                    if (nx < maxX && nx + nWidth > minX && ny < maxY && ny + nHeight > minY) {
+                        selectedNodes.add(node.id);
+                        el.classList.add('selected');
+                    } else if (!e.shiftKey) {
+                        selectedNodes.delete(node.id);
+                        el.classList.remove('selected');
+                    }
+                });
+                return;
+            }
+
+            if (isConnecting && sourcePin) {
+                const r1 = sourcePin.getBoundingClientRect();
+                const x1 = (r1.left - panX) / zoom + (r1.width / zoom) / 2;
+                const y1 = (r1.top - panY) / zoom + (r1.height / zoom) / 2;
+                const x2 = (e.clientX - panX) / zoom;
+                const y2 = (e.clientY - panY) / zoom;
+
+                const dx = Math.abs(x2 - x1) * 0.5;
+                const cp1x = x1 + Math.max(dx, 30);
+                const cp1y = y1;
+                const cp2x = x2 - Math.max(dx, 30);
+                const cp2y = y2;
+
+                activePath.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x2} ${y2}`);
+            }
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            isPanning = false;
+            isDraggingNodes = false;
+            document.body.style.cursor = 'default';
+            
+            if (isSelecting) {
+                isSelecting = false;
+                selectionBox.style.display = 'none';
+            }
+
+            if (isConnecting) {
+                isConnecting = false;
+                activePath.setAttribute('d', '');
+            }
+        });
+
+        window.addEventListener('wheel', (e) => {
+            const zoomFactor = 0.1;
+            const oldZoom = zoom;
+            
+            if (e.deltaY < 0) {
+                zoom = Math.min(zoom + zoomFactor, 2);
+            } else {
+                zoom = Math.max(zoom - zoomFactor, 0.2);
+            }
+
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            panX = mouseX - ((mouseX - panX) * (zoom / oldZoom));
+            panY = mouseY - ((mouseY - panY) * (zoom / oldZoom));
+
+            updateWorkspaceTransform();
+            drawLinks();
+        }, { passive: true });
+
+        window.addEventListener('resize', drawLinks);
+
+
+/* ========================================= */
+/* [CATEGORIA: INICIALIZAÇÃO JS]             */
+/* Chamada de Funções Base                   */
+/* ========================================= */
+        createDOM();
+        setTimeout(drawLinks, 50);
+    </script>
+</body>
+</html>

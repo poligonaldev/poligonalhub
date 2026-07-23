@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PARANOIDE - GDD</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Major Mono Display & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #0a0a0a;
+            --bg-card: #151515;
+            --text-light: #e0e0e0;
+            --text-muted: #888888;
+            --red-primary: #8b0000;
+            --red-glow: #ff1a1a;
+            --border-color: #333333;
+            --acid-green: #a8ff00; /* Sinalização IA DDA */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-light);
+            /* Utilizando a CAPA.jpg local com um overlay escuro para garantir a leitura */
+            background-image: linear-gradient(rgba(10, 10, 10, 0.88), rgba(10, 10, 10, 0.95)), url('./CAPA.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        .font-major-mono {
+            font-family: 'Major Mono Display', monospace;
+            font-weight: bold;
+        }
+
+        .card-bg {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+            position: relative;
+            backdrop-filter: blur(4px);
+        }
+
+        .usp-card {
+            background-color: rgba(21, 21, 21, 0.8);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 0.25rem;
+        }
+
+        .usp-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--red-primary);
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.4);
+        }
+
+        .divider {
+            height: 2px;
+            width: 120px;
+            margin: 2rem auto;
+            background: linear-gradient(to right, transparent, var(--red-primary), transparent);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--red-primary);
+            margin-top: 0.75rem;
+        }
+
+        .section-title.center::after {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- EFEITO CRT REALISTA E REFINADO --- */
+
+        /* 1. Aberração Cromática Global super sutil */
+        body {
+            text-shadow: 0.5px 0px 1px rgba(255, 0, 0, 0.3), -0.5px 0px 1px rgba(0, 255, 255, 0.3);
+        }
+
+        /* 2. Camada Dedicada de Película do Monitor (Scanlines) */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9998;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+            background-size: 100% 3px;
+        }
+
+        /* 3. Barra de Varredura (Refresh Line) descendo lentamente */
+        .crt-overlay::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(168, 255, 0, 0.03) 10%, transparent 20%);
+            background-size: 100% 200%;
+            animation: scanline-refresh 10s linear infinite;
+        }
+
+        /* 4. Tubo de Vidro (Vinheta e Cintilação) */
+        .crt-vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            background: radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8);
+            animation: crt-flicker 0.15s infinite;
+        }
+
+        /* 5. Instabilidade de Sinal (Glitch/Jitter) focado no conteúdo */
+        .crt-jitter {
+            animation: glitch-jitter 7s infinite;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes scanline-refresh {
+            0% { background-position: 0 -100vh; }
+            100% { background-position: 0 100vh; }
+        }
+
+        @keyframes crt-flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.98; }
+        }
+
+        @keyframes glitch-jitter {
+            0%, 95%, 100% { transform: translate(0, 0); filter: hue-rotate(0deg); }
+            96% { transform: translate(-2px, 1px) skewX(0.5deg); filter: hue-rotate(10deg); }
+            97% { transform: translate(2px, -1px); }
+            98% { transform: translate(-1px, 1px) skewX(-0.5deg); filter: hue-rotate(-10deg); }
+            99% { transform: translate(1px, -1px); }
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+        }
+
+        /* Glitch effect elegante no hover dos títulos */
+        .glitch-hover:hover {
+            color: var(--text-light);
+            text-shadow: 2px 0px 0px var(--red-glow), -2px 0px 0px var(--acid-green);
+            transform: scale(1.02) skewX(-2deg);
+            transition: all 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Camadas de Imersão CRT Refinadas -->
+    <div class="crt-overlay"></div>
+    <div class="crt-vignette"></div>
+
+    <div class="container mx-auto p-4 md:p-8 relative z-10 crt-jitter">
+
+        <!-- HEADER -->
+        <header class="text-center my-20">
+            <!-- Letreiro Local Substituindo o Texto -->
+            <img src="./LETREIRO.png" alt="PARANOIDE" class="w-full max-w-5xl mx-auto drop-shadow-[0_10px_20px_rgba(139,0,0,0.5)] mb-8">
+            
+            <div class="divider my-6"></div>
+            <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto font-major-mono leading-tight">
+                <span class="block">Não chorar nos componentes.</span>
+                <span class="block mt-1">Salinidade corrói circuitos.</span>
+            </p>
+        </header>
+
+        <main class="space-y-16">
+
+            <!-- VISÃO GERAL -->
+            <section class="card-bg p-8 border-l-4 border-l-[var(--red-primary)]">
+                <h2 class="font-major-mono text-3xl mb-4 text-red-600 section-title glitch-hover">Visão Geral</h2>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    Poderia ser só um clone de Arkanoid, mas PARANOIDE vira o gênero Breakout de cabeça para baixo com a proposta de tentar desestabilizar o jogador a todo custo. Quem joga é <span class="text-red-500 font-bold">L.I.X.O.</span> (Liga Instável de Xenótipo Obsoleto) de teste da <span class="text-[var(--acid-green)] font-bold">A.I. D.E.N.T.O.</span> (Algoritmo Insuportável de Dispositivo Entrópico de Negatividade Totalmente Otimizada), uma inteligência artificial altamente avançada e particularmente desdenhosa com a vida humana. A IA aplica testes de força motriz física e psicológica, sabotando o tabuleiro, apagando a tela e disparando comentários jocosos enquanto o jogador rebate o disco corporativo.
+                </p>
+            </section>
+
+            <!-- PÚBLICO E PLATAFORMAS -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card-bg p-8 flex flex-col justify-center items-center text-center">
+                    <p class="font-major-mono text-sm uppercase tracking-widest text-gray-400 mb-2">Classificação Indicativa</p>
+                    <p class="font-major-mono text-5xl md:text-6xl text-red-600">LIVRE</p>
+                </div>
+                <div class="card-bg p-8 flex flex-col justify-center items-center text-center">
+                    <p class="font-major-mono text-sm uppercase tracking-widest text-gray-400 mb-2">Plataforma Alvo</p>
+                    <p class="font-major-mono text-4xl md:text-5xl text-red-600">PC</p>
+                    <p class="text-xs text-gray-500 mt-3 font-major-mono">Com controles simplificados para port mobile no futuro.</p>
+                </div>
+            </section>
+
+            <!-- DIFERENCIAIS DE VENDA -->
+            <section class="card-bg p-8">
+                <h3 class="font-major-mono text-3xl text-center mb-10 text-red-600 section-title center glitch-hover">Diferenciais de Venda</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="usp-card p-6 text-center">
+                        <div class="text-4xl mb-4 text-red-600 font-major-mono">👁️</div>
+                        <h4 class="font-major-mono text-xl mb-3 text-red-500 leading-tight">Presença Opressiva</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">A presença sufocante da IA D.E.N.T.O. que observa, zomba e sabota ativamente a partida através de uma interface burocrática estilo Fallout.</p>
+                    </div>
+                    <div class="usp-card p-6 text-center">
+                        <div class="text-4xl mb-4 text-red-600 font-major-mono">⚡</div>
+                        <h4 class="font-major-mono text-xl mb-3 text-red-500 leading-tight">Eletrônica Literal</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Tabuleiro estruturado com representações fiéis de diodos, resistores, transistores e circuitos integrados. Decadência Tecnológica Organizada.</p>
+                    </div>
+                    <div class="usp-card p-6 text-center">
+                        <div class="text-4xl mb-4 text-red-600 font-major-mono">🔄</div>
+                        <h4 class="font-major-mono text-xl mb-3 text-red-500 leading-tight">Subversão de Gênero</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Inversões de tela, apagões momentâneos e controles invertidos criam mecânicas dinâmicas que desestabilizam e confundem o jogador.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODOS E MECÂNICAS -->
+            <section class="card-bg p-8 border-l-4 border-l-[var(--red-primary)]">
+                <h3 class="font-major-mono text-3xl mb-6 text-red-600 section-title glitch-hover">Estrutura e Elementos</h3>
+                <div class="space-y-8 text-gray-300 mt-8">
+                    <div class="bg-[#0f0f0f] p-6 rounded border border-gray-800">
+                        <h4 class="font-major-mono text-xl text-red-500 mb-2">Núcleo do Gameplay</h4>
+                        <p class="text-sm leading-relaxed text-gray-400">
+                            Ao destruir todos os blocos da tela, o L.I.X.O. passa para a próxima fase, com um layout inicial diferente e novas formas de sabotagem. O jogo possui um número fixo de estágios culminando em uma batalha final. O disco ricocheteia horizontalmente controlado pela raquete em um tabuleiro que reflete a realidade de circuitos eletrônicos.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="font-major-mono text-xl text-red-500 mb-4">Peças</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
+                                <span class="font-major-mono text-white block mb-1">Resistores [1x1]</span>
+                                <span class="text-xs text-gray-400">Blocos quadrados padrão do tabuleiro. Possuem 3 níveis de resistência.</span>
+                            </div>
+                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
+                                <span class="font-major-mono text-white block mb-1">Capacitores [1x1]</span>
+                                <span class="text-xs text-gray-400">Blocos redondos que liberam melhorias (Multidiscos, Atirador, Extensível, etc).</span>
+                            </div>
+                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
+                                <span class="font-major-mono text-white block mb-1">Dissipadores [2x2]</span>
+                                <span class="text-xs text-gray-400">Elementos estruturais metálicos chumbados na placa. São indestrutíveis.</span>
+                            </div>
+                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
+                                <span class="font-major-mono text-white block mb-1">Bobinas [2x2]</span>
+                                <span class="text-xs text-gray-400">Repelentes magnéticos incandescentes que aceleram o disco para ângulos inesperados.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- JOGOS CORRELATOS -->
+            <section class="card-bg p-8">
+                <h3 class="font-major-mono text-3xl mb-4 text-center text-red-600 section-title center glitch-hover">Jogos Correlatos</h3>
+                <p class="mb-8 text-center text-gray-400 max-w-2xl mx-auto text-sm">
+                    Paralelo referencial entre a estrutura de testes psicológicos hostis, a mecânica clássica de arcade e o design visual distópico.
+                </p>
+                <div class="chart-container">
+                    <canvas id="competitorAnalysisChart"></canvas>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="mt-16 py-8 border-t border-gray-800">
+            <div class="container mx-auto px-6 text-center text-gray-500 text-sm font-major-mono">
+                <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="hover:text-red-500 transition-colors">
+                    © <script>document.write(/\d{4}/.exec(Date())[0])</script> Centro Comunitário-Criativo Poligonal.
+                </a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- SCRIPT DO GRÁFICO -->
+    <script>
+        const ctx = document.getElementById('competitorAnalysisChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Pressão Psicológica', 'Precisão Arcade', 'Complexidade Mecânica', 'Estética Distópica', 'Inovação de Regras'],
+                datasets: [
+                    {
+                        label: 'PARANOIDE',
+                        data: [10, 8, 9, 10, 9],
+                        backgroundColor: 'rgba(139, 0, 0, 0.3)',
+                        borderColor: '#8b0000',
+                        pointBackgroundColor: '#ff1a1a',
+                        pointBorderColor: '#fff',
+                        borderWidth: 3,
+                    },
+                    {
+                        label: 'Portal',
+                        data: [9, 6, 8, 9, 10],
+                        backgroundColor: 'rgba(100, 100, 100, 0.2)',
+                        borderColor: '#666',
+                        pointBackgroundColor: '#888',
+                        pointBorderColor: '#fff',
+                    },
+                    {
+                        label: 'Arkanoid',
+                        data: [2, 10, 6, 4, 3],
+                        backgroundColor: 'rgba(50, 50, 50, 0.2)',
+                        borderColor: '#444',
+                        pointBackgroundColor: '#555',
+                        pointBorderColor: '#fff',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(139, 0, 0, 0.3)' },
+                        grid: { color: 'rgba(139, 0, 0, 0.3)' },
+                        pointLabels: {
+                            color: '#e0e0e0',
+                            font: { family: "'Major Mono Display', monospace", size: 11, weight: 'bold' }
+                        },
+                        ticks: {
+                            color: '#888888',
+                            backdropColor: 'transparent',
+                            stepSize: 2,
+                            min: 0,
+                            max: 10
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#e0e0e0',
+                            font: { family: "'Major Mono Display', monospace", size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
