@@ -44,11 +44,17 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-light);
-            /* Utilizando a CAPA.jpg local com um overlay escuro para garantir a leitura */
+        }
+
+        /* Fundo fixo otimizado para mobile (resolve o tremor de scroll no iOS/Android) */
+        .bg-fixed-layer {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-image: linear-gradient(rgba(13, 13, 13, 0.9), rgba(13, 13, 13, 0.96)), url('./CAPA.jpg');
             background-size: cover;
-            background-attachment: fixed;
             background-position: center;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .font-major-mono {
@@ -109,7 +115,7 @@
         /* 2. Camada Dedicada de Película do Monitor (Scanlines) */
         .crt-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0; left: 0; right: 0; bottom: 0;
             pointer-events: none;
             z-index: 9998;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
@@ -130,7 +136,7 @@
         /* 4. Tubo de Vidro (Vinheta Estática) */
         .crt-vignette {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0; left: 0; right: 0; bottom: 0;
             pointer-events: none;
             z-index: 9999;
             /* Suavizado para garantir leitura nas bordas do mobile */
@@ -154,16 +160,27 @@
             max-height: 450px;
         }
 
-        /* Glitch effect elegante no hover dos títulos */
+        /* Efeito elegante no hover dos títulos (sem tremores ou deformações físicas) */
+        .glitch-hover {
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        
         .glitch-hover:hover {
             color: var(--text-light);
-            text-shadow: 2px 0px 0px var(--red-primary), -2px 0px 0px var(--text-muted);
-            transform: scale(1.02) skewX(-2deg);
-            transition: all 0.1s ease;
+            text-shadow: 0px 0px 10px rgba(140, 3, 3, 0.8), 2px 2px 0px rgba(89, 2, 2, 0.5);
         }
     </style>
 </head>
 <body>
+
+    <!-- Fundo Fixo Otimizado (Evita jitter no scroll mobile) -->
+    <div class="bg-fixed-layer"></div>
+
+    <!-- Camadas de Imersão CRT Refinadas -->
+    <div class="crt-overlay"></div>
+    <div class="crt-vignette"></div>
+
+    <div class="container mx-auto p-4 md:p-8 relative z-10">
 
     <!-- Camadas de Imersão CRT Refinadas -->
     <div class="crt-overlay"></div>
