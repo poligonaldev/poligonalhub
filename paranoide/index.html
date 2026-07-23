@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PARANOIDE - GDD</title>
     
+    <!-- Meta Tags Sociais (Open Graph / Twitter) -->
+    <meta property="og:title" content="PARANOIDE - GDD">
+    <meta property="og:description" content="Não chorar nos componentes. Salinidade corrói circuitos.">
+    <meta property="og:image" content="https://poligonalhub.com/paranoide/socialpreview.png">
+    <meta property="og:url" content="https://poligonalhub.com/paranoide/">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PARANOIDE - GDD">
+    <meta name="twitter:description" content="Não chorar nos componentes. Salinidade corrói circuitos.">
+    <meta name="twitter:image" content="https://poligonalhub.com/paranoide/socialpreview.png">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -18,14 +30,14 @@
     
     <style>
         :root {
-            --bg-main: #0a0a0a;
-            --bg-card: #151515;
-            --text-light: #e0e0e0;
-            --text-muted: #888888;
-            --red-primary: #8b0000;
-            --red-glow: #ff1a1a;
-            --border-color: #333333;
-            --acid-green: #a8ff00; /* Sinalização IA DDA */
+            --bg-main: #0D0D0D;
+            --bg-card: rgba(13, 13, 13, 0.85); /* #0D0D0D com leve opacidade */
+            --text-light: #D9D9D9;
+            --text-muted: #4A4A4A;
+            --red-primary: #8C0303;
+            --red-dark: #590202;
+            --border-color: #4A4A4A;
+            --acid-green: #a8ff00; /* Sinalização IA DDA - Mantida como contraste narrativo */
         }
 
         body {
@@ -33,7 +45,7 @@
             background-color: var(--bg-main);
             color: var(--text-light);
             /* Utilizando a CAPA.jpg local com um overlay escuro para garantir a leitura */
-            background-image: linear-gradient(rgba(10, 10, 10, 0.88), rgba(10, 10, 10, 0.95)), url('./CAPA.jpg');
+            background-image: linear-gradient(rgba(13, 13, 13, 0.9), rgba(13, 13, 13, 0.96)), url('./CAPA.jpg');
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
@@ -54,7 +66,7 @@
         }
 
         .usp-card {
-            background-color: rgba(21, 21, 21, 0.8);
+            background-color: var(--bg-main);
             border: 1px solid var(--border-color);
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             border-radius: 0.25rem;
@@ -63,7 +75,7 @@
         .usp-card:hover {
             transform: translateY(-5px);
             border-color: var(--red-primary);
-            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.4);
+            box-shadow: 0 5px 15px rgba(140, 3, 3, 0.4);
         }
 
         .divider {
@@ -91,7 +103,7 @@
 
         /* 1. Aberração Cromática Global super sutil */
         body {
-            text-shadow: 0.5px 0px 1px rgba(255, 0, 0, 0.3), -0.5px 0px 1px rgba(0, 255, 255, 0.3);
+            text-shadow: 0.5px 0px 1px rgba(140, 3, 3, 0.4), -0.5px 0px 1px rgba(74, 74, 74, 0.3);
         }
 
         /* 2. Camada Dedicada de Película do Monitor (Scanlines) */
@@ -100,8 +112,9 @@
             top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none;
             z-index: 9998;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
-            background-size: 100% 3px;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 4px;
+            opacity: 0.5;
         }
 
         /* 3. Barra de Varredura (Refresh Line) descendo lentamente */
@@ -109,46 +122,25 @@
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(168, 255, 0, 0.03) 10%, transparent 20%);
+            background: linear-gradient(to bottom, transparent, rgba(168, 255, 0, 0.04) 10%, transparent 20%);
             background-size: 100% 200%;
-            animation: scanline-refresh 10s linear infinite;
+            animation: scanline-refresh 8s linear infinite;
         }
 
-        /* 4. Tubo de Vidro (Vinheta e Cintilação) */
+        /* 4. Tubo de Vidro (Vinheta Estática) */
         .crt-vignette {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none;
             z-index: 9999;
-            background: radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8);
-            animation: crt-flicker 0.15s infinite;
-        }
-
-        /* 5. Instabilidade de Sinal (Glitch/Jitter) focado no conteúdo */
-        .crt-jitter {
-            animation: glitch-jitter 7s infinite;
-            position: relative;
-            z-index: 10;
+            /* Suavizado para garantir leitura nas bordas do mobile */
+            background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.8) 120%);
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.9);
         }
 
         @keyframes scanline-refresh {
             0% { background-position: 0 -100vh; }
             100% { background-position: 0 100vh; }
-        }
-
-        @keyframes crt-flicker {
-            0% { opacity: 0.97; }
-            50% { opacity: 1; }
-            100% { opacity: 0.98; }
-        }
-
-        @keyframes glitch-jitter {
-            0%, 95%, 100% { transform: translate(0, 0); filter: hue-rotate(0deg); }
-            96% { transform: translate(-2px, 1px) skewX(0.5deg); filter: hue-rotate(10deg); }
-            97% { transform: translate(2px, -1px); }
-            98% { transform: translate(-1px, 1px) skewX(-0.5deg); filter: hue-rotate(-10deg); }
-            99% { transform: translate(1px, -1px); }
         }
 
         .chart-container {
@@ -157,13 +149,15 @@
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
-            height: 400px;
+            height: 50vh;
+            min-height: 350px;
+            max-height: 450px;
         }
 
         /* Glitch effect elegante no hover dos títulos */
         .glitch-hover:hover {
             color: var(--text-light);
-            text-shadow: 2px 0px 0px var(--red-glow), -2px 0px 0px var(--acid-green);
+            text-shadow: 2px 0px 0px var(--red-primary), -2px 0px 0px var(--text-muted);
             transform: scale(1.02) skewX(-2deg);
             transition: all 0.1s ease;
         }
@@ -175,93 +169,93 @@
     <div class="crt-overlay"></div>
     <div class="crt-vignette"></div>
 
-    <div class="container mx-auto p-4 md:p-8 relative z-10 crt-jitter">
+    <div class="container mx-auto p-4 md:p-8 relative z-10">
 
         <!-- HEADER -->
-        <header class="text-center my-20">
+        <header class="text-center my-12 md:my-20">
             <!-- Letreiro Local Substituindo o Texto -->
-            <img src="./LETREIRO.png" alt="PARANOIDE" class="w-full max-w-5xl mx-auto drop-shadow-[0_10px_20px_rgba(139,0,0,0.5)] mb-8">
+            <img src="./LETREIRO.png" alt="PARANOIDE" class="w-full max-w-4xl mx-auto drop-shadow-[0_10px_20px_rgba(140,3,3,0.5)] mb-6 md:mb-8 px-2 md:px-0">
             
-            <div class="divider my-6"></div>
-            <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto font-major-mono leading-tight">
+            <div class="divider my-4 md:my-6"></div>
+            <p class="text-base md:text-xl text-[var(--text-light)] opacity-90 max-w-3xl mx-auto font-major-mono leading-tight px-4">
                 <span class="block">Não chorar nos componentes.</span>
                 <span class="block mt-1">Salinidade corrói circuitos.</span>
             </p>
         </header>
 
-        <main class="space-y-16">
+        <main class="space-y-12 md:space-y-16">
 
             <!-- VISÃO GERAL -->
-            <section class="card-bg p-8 border-l-4 border-l-[var(--red-primary)]">
-                <h2 class="font-major-mono text-3xl mb-4 text-red-600 section-title glitch-hover">Visão Geral</h2>
-                <p class="text-lg leading-relaxed text-gray-300">
-                    Poderia ser só um clone de Arkanoid, mas PARANOIDE vira o gênero Breakout de cabeça para baixo com a proposta de tentar desestabilizar o jogador a todo custo. Quem joga é <span class="text-red-500 font-bold">L.I.X.O.</span> (Liga Instável de Xenótipo Obsoleto) de teste da <span class="text-[var(--acid-green)] font-bold">A.I. D.E.N.T.O.</span> (Algoritmo Insuportável de Dispositivo Entrópico de Negatividade Totalmente Otimizada), uma inteligência artificial altamente avançada e particularmente desdenhosa com a vida humana. A IA aplica testes de força motriz física e psicológica, sabotando o tabuleiro, apagando a tela e disparando comentários jocosos enquanto o jogador rebate o disco corporativo.
+            <section class="card-bg p-6 md:p-8 border-l-4 border-l-[var(--red-primary)]">
+                <h2 class="font-major-mono text-2xl md:text-3xl mb-4 text-[var(--red-primary)] section-title glitch-hover">Visão Geral</h2>
+                <p class="text-base md:text-lg leading-relaxed text-[var(--text-light)]">
+                    Poderia ser só um clone de Arkanoid, mas PARANOIDE vira o gênero Breakout de cabeça para baixo com a proposta de tentar desestabilizar o jogador a todo custo. Quem joga é <span class="text-[var(--red-primary)] font-bold">L.I.X.O.</span> (Liga Instável de Xenótipo Obsoleto) de teste da <span class="text-[var(--acid-green)] font-bold">A.I. D.E.N.T.O.</span> (Algoritmo Insuportável de Dispositivo Entrópico de Negatividade Totalmente Otimizada), uma inteligência artificial altamente avançada e particularmente desdenhosa com a vida humana. A IA aplica testes de força motriz física e psicológica, sabotando o tabuleiro, apagando a tela e disparando comentários jocosos enquanto o jogador rebate o disco corporativo.
                 </p>
             </section>
 
             <!-- PÚBLICO E PLATAFORMAS -->
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card-bg p-8 flex flex-col justify-center items-center text-center">
-                    <p class="font-major-mono text-sm uppercase tracking-widest text-gray-400 mb-2">Classificação Indicativa</p>
-                    <p class="font-major-mono text-5xl md:text-6xl text-red-600">LIVRE</p>
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <div class="card-bg p-6 md:p-8 flex flex-col justify-center items-center text-center">
+                    <p class="font-major-mono text-xs md:text-sm uppercase tracking-widest text-[var(--text-light)] opacity-70 mb-2">Classificação Indicativa</p>
+                    <p class="font-major-mono text-5xl md:text-6xl text-[var(--red-primary)]">LIVRE</p>
                 </div>
-                <div class="card-bg p-8 flex flex-col justify-center items-center text-center">
-                    <p class="font-major-mono text-sm uppercase tracking-widest text-gray-400 mb-2">Plataforma Alvo</p>
-                    <p class="font-major-mono text-4xl md:text-5xl text-red-600">PC</p>
-                    <p class="text-xs text-gray-500 mt-3 font-major-mono">Com controles simplificados para port mobile no futuro.</p>
+                <div class="card-bg p-6 md:p-8 flex flex-col justify-center items-center text-center">
+                    <p class="font-major-mono text-xs md:text-sm uppercase tracking-widest text-[var(--text-light)] opacity-70 mb-2">Plataforma Alvo</p>
+                    <p class="font-major-mono text-4xl md:text-5xl text-[var(--red-primary)]">PC</p>
+                    <p class="text-xs text-[var(--text-light)] opacity-60 mt-3 font-major-mono">Com controles simplificados para port mobile no futuro.</p>
                 </div>
             </section>
 
             <!-- DIFERENCIAIS DE VENDA -->
-            <section class="card-bg p-8">
-                <h3 class="font-major-mono text-3xl text-center mb-10 text-red-600 section-title center glitch-hover">Diferenciais de Venda</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <section class="card-bg p-6 md:p-8">
+                <h3 class="font-major-mono text-2xl md:text-3xl text-center mb-8 md:mb-10 text-[var(--red-primary)] section-title center glitch-hover">Diferenciais de Venda</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                     <div class="usp-card p-6 text-center">
-                        <div class="text-4xl mb-4 text-red-600 font-major-mono">👁️</div>
-                        <h4 class="font-major-mono text-xl mb-3 text-red-500 leading-tight">Presença Opressiva</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed">A presença sufocante da IA D.E.N.T.O. que observa, zomba e sabota ativamente a partida através de uma interface burocrática estilo Fallout.</p>
+                        <div class="text-4xl mb-4 text-[var(--red-primary)] font-major-mono">👁️</div>
+                        <h4 class="font-major-mono text-lg md:text-xl mb-3 text-[var(--red-primary)] leading-tight">Presença Opressiva</h4>
+                        <p class="text-sm text-[var(--text-light)] opacity-80 leading-relaxed">A presença sufocante da IA D.E.N.T.O. que observa, zomba e sabota ativamente a partida através de uma interface burocrática estilo Fallout.</p>
                     </div>
                     <div class="usp-card p-6 text-center">
-                        <div class="text-4xl mb-4 text-red-600 font-major-mono">⚡</div>
-                        <h4 class="font-major-mono text-xl mb-3 text-red-500 leading-tight">Eletrônica Literal</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed">Tabuleiro estruturado com representações fiéis de diodos, resistores, transistores e circuitos integrados. Decadência Tecnológica Organizada.</p>
+                        <div class="text-4xl mb-4 text-[var(--red-primary)] font-major-mono">⚡</div>
+                        <h4 class="font-major-mono text-lg md:text-xl mb-3 text-[var(--red-primary)] leading-tight">Eletrônica Literal</h4>
+                        <p class="text-sm text-[var(--text-light)] opacity-80 leading-relaxed">Tabuleiro estruturado com representações fiéis de diodos, resistores, transistores e circuitos integrados. Decadência Tecnológica Organizada.</p>
                     </div>
                     <div class="usp-card p-6 text-center">
-                        <div class="text-4xl mb-4 text-red-600 font-major-mono">🔄</div>
-                        <h4 class="font-major-mono text-xl mb-3 text-red-500 leading-tight">Subversão de Gênero</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed">Inversões de tela, apagões momentâneos e controles invertidos criam mecânicas dinâmicas que desestabilizam e confundem o jogador.</p>
+                        <div class="text-4xl mb-4 text-[var(--red-primary)] font-major-mono">🔄</div>
+                        <h4 class="font-major-mono text-lg md:text-xl mb-3 text-[var(--red-primary)] leading-tight">Subversão de Gênero</h4>
+                        <p class="text-sm text-[var(--text-light)] opacity-80 leading-relaxed">Inversões de tela, apagões momentâneos e controles invertidos criam mecânicas dinâmicas que desestabilizam e confundem o jogador.</p>
                     </div>
                 </div>
             </section>
 
             <!-- MODOS E MECÂNICAS -->
-            <section class="card-bg p-8 border-l-4 border-l-[var(--red-primary)]">
-                <h3 class="font-major-mono text-3xl mb-6 text-red-600 section-title glitch-hover">Estrutura e Elementos</h3>
-                <div class="space-y-8 text-gray-300 mt-8">
-                    <div class="bg-[#0f0f0f] p-6 rounded border border-gray-800">
-                        <h4 class="font-major-mono text-xl text-red-500 mb-2">Núcleo do Gameplay</h4>
-                        <p class="text-sm leading-relaxed text-gray-400">
+            <section class="card-bg p-6 md:p-8 border-l-4 border-l-[var(--red-primary)]">
+                <h3 class="font-major-mono text-2xl md:text-3xl mb-6 text-[var(--red-primary)] section-title glitch-hover">Estrutura e Elementos</h3>
+                <div class="space-y-6 md:space-y-8 text-[var(--text-light)] mt-6 md:mt-8">
+                    <div class="bg-[var(--bg-main)] p-5 md:p-6 rounded border border-[var(--border-color)]">
+                        <h4 class="font-major-mono text-lg md:text-xl text-[var(--red-primary)] mb-2">Núcleo do Gameplay</h4>
+                        <p class="text-sm leading-relaxed text-[var(--text-light)] opacity-80">
                             Ao destruir todos os blocos da tela, o L.I.X.O. passa para a próxima fase, com um layout inicial diferente e novas formas de sabotagem. O jogo possui um número fixo de estágios culminando em uma batalha final. O disco ricocheteia horizontalmente controlado pela raquete em um tabuleiro que reflete a realidade de circuitos eletrônicos.
                         </p>
                     </div>
                     <div>
-                        <h4 class="font-major-mono text-xl text-red-500 mb-4">Peças</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
-                                <span class="font-major-mono text-white block mb-1">Resistores [1x1]</span>
-                                <span class="text-xs text-gray-400">Blocos quadrados padrão do tabuleiro. Possuem 3 níveis de resistência.</span>
+                        <h4 class="font-major-mono text-lg md:text-xl text-[var(--red-primary)] mb-4">Tipos de Peças</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 border border-[var(--border-color)] bg-[var(--bg-main)] rounded">
+                                <span class="font-major-mono text-[var(--text-light)] block mb-1">Resistores [1x1]</span>
+                                <span class="text-xs text-[var(--text-light)] opacity-70">Blocos quadrados padrão do tabuleiro. Possuem 3 níveis de resistência.</span>
                             </div>
-                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
-                                <span class="font-major-mono text-white block mb-1">Capacitores [1x1]</span>
-                                <span class="text-xs text-gray-400">Blocos redondos que liberam melhorias (Multidiscos, Atirador, Extensível, etc).</span>
+                            <div class="p-4 border border-[var(--border-color)] bg-[var(--bg-main)] rounded">
+                                <span class="font-major-mono text-[var(--text-light)] block mb-1">Capacitores [1x1]</span>
+                                <span class="text-xs text-[var(--text-light)] opacity-70">Blocos redondos que liberam melhorias (Multidiscos, Atirador, Extensível, etc).</span>
                             </div>
-                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
-                                <span class="font-major-mono text-white block mb-1">Dissipadores [2x2]</span>
-                                <span class="text-xs text-gray-400">Elementos estruturais metálicos chumbados na placa. São indestrutíveis.</span>
+                            <div class="p-4 border border-[var(--border-color)] bg-[var(--bg-main)] rounded">
+                                <span class="font-major-mono text-[var(--text-light)] block mb-1">Dissipadores [2x2]</span>
+                                <span class="text-xs text-[var(--text-light)] opacity-70">Elementos estruturais metálicos chumbados na placa. São totalmente indestrutíveis.</span>
                             </div>
-                            <div class="p-4 border border-gray-800 bg-[#111] rounded">
-                                <span class="font-major-mono text-white block mb-1">Bobinas [2x2]</span>
-                                <span class="text-xs text-gray-400">Repelentes magnéticos incandescentes que aceleram o disco para ângulos inesperados.</span>
+                            <div class="p-4 border border-[var(--border-color)] bg-[var(--bg-main)] rounded">
+                                <span class="font-major-mono text-[var(--text-light)] block mb-1">Bobinas [2x2]</span>
+                                <span class="text-xs text-[var(--text-light)] opacity-70">Repelentes magnéticos incandescentes que aceleram o disco para ângulos inesperados.</span>
                             </div>
                         </div>
                     </div>
@@ -269,9 +263,9 @@
             </section>
 
             <!-- JOGOS CORRELATOS -->
-            <section class="card-bg p-8">
-                <h3 class="font-major-mono text-3xl mb-4 text-center text-red-600 section-title center glitch-hover">Jogos Correlatos</h3>
-                <p class="mb-8 text-center text-gray-400 max-w-2xl mx-auto text-sm">
+            <section class="card-bg p-6 md:p-8">
+                <h3 class="font-major-mono text-2xl md:text-3xl mb-4 text-center text-[var(--red-primary)] section-title center glitch-hover">Jogos Correlatos</h3>
+                <p class="mb-6 md:mb-8 text-center text-[var(--text-light)] opacity-80 max-w-2xl mx-auto text-sm px-4">
                     Paralelo referencial entre a estrutura de testes psicológicos hostis, a mecânica clássica de arcade e o design visual distópico.
                 </p>
                 <div class="chart-container">
@@ -282,9 +276,9 @@
         </main>
 
         <!-- FOOTER -->
-        <footer class="mt-16 py-8 border-t border-gray-800">
-            <div class="container mx-auto px-6 text-center text-gray-500 text-sm font-major-mono">
-                <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="hover:text-red-500 transition-colors">
+        <footer class="mt-12 md:mt-16 py-8 border-t border-[var(--border-color)]">
+            <div class="container mx-auto px-6 text-center text-[var(--text-light)] opacity-60 text-sm font-major-mono">
+                <a href="http://poligonalhub.com" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--red-primary)] hover:opacity-100 transition-colors">
                     © <script>document.write(/\d{4}/.exec(Date())[0])</script> Centro Comunitário-Criativo Poligonal.
                 </a>
             </div>
@@ -303,27 +297,27 @@
                     {
                         label: 'PARANOIDE',
                         data: [10, 8, 9, 10, 9],
-                        backgroundColor: 'rgba(139, 0, 0, 0.3)',
-                        borderColor: '#8b0000',
-                        pointBackgroundColor: '#ff1a1a',
-                        pointBorderColor: '#fff',
+                        backgroundColor: 'rgba(140, 3, 3, 0.3)',
+                        borderColor: '#8C0303',
+                        pointBackgroundColor: '#8C0303',
+                        pointBorderColor: '#D9D9D9',
                         borderWidth: 3,
                     },
                     {
                         label: 'Portal',
                         data: [9, 6, 8, 9, 10],
-                        backgroundColor: 'rgba(100, 100, 100, 0.2)',
-                        borderColor: '#666',
-                        pointBackgroundColor: '#888',
-                        pointBorderColor: '#fff',
+                        backgroundColor: 'rgba(74, 74, 74, 0.2)',
+                        borderColor: '#4A4A4A',
+                        pointBackgroundColor: '#4A4A4A',
+                        pointBorderColor: '#D9D9D9',
                     },
                     {
                         label: 'Arkanoid',
                         data: [2, 10, 6, 4, 3],
-                        backgroundColor: 'rgba(50, 50, 50, 0.2)',
-                        borderColor: '#444',
-                        pointBackgroundColor: '#555',
-                        pointBorderColor: '#fff',
+                        backgroundColor: 'rgba(89, 2, 2, 0.2)',
+                        borderColor: '#590202',
+                        pointBackgroundColor: '#590202',
+                        pointBorderColor: '#D9D9D9',
                     }
                 ]
             },
@@ -332,14 +326,14 @@
                 maintainAspectRatio: false,
                 scales: {
                     r: {
-                        angleLines: { color: 'rgba(139, 0, 0, 0.3)' },
-                        grid: { color: 'rgba(139, 0, 0, 0.3)' },
+                        angleLines: { color: 'rgba(74, 74, 74, 0.5)' },
+                        grid: { color: 'rgba(74, 74, 74, 0.5)' },
                         pointLabels: {
-                            color: '#e0e0e0',
-                            font: { family: "'Major Mono Display', monospace", size: 11, weight: 'bold' }
+                            color: '#D9D9D9',
+                            font: { family: "'Major Mono Display', monospace", size: 10, weight: 'bold' }
                         },
                         ticks: {
-                            color: '#888888',
+                            color: 'rgba(217, 217, 217, 0.7)',
                             backdropColor: 'transparent',
                             stepSize: 2,
                             min: 0,
@@ -351,8 +345,8 @@
                     legend: {
                         position: 'top',
                         labels: {
-                            color: '#e0e0e0',
-                            font: { family: "'Major Mono Display', monospace", size: 12 }
+                            color: '#D9D9D9',
+                            font: { family: "'Major Mono Display', monospace", size: 11 }
                         }
                     }
                 }
