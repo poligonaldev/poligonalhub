@@ -1,0 +1,1345 @@
+<!-- 
+  ========================================================================
+  ÍNDICE DE BLOCOS DO CÓDIGO (Para atualizações modulares)
+  ========================================================================
+  [BLOCO 1] CSS: Variáveis e Configurações Base
+  [BLOCO 2] CSS: Animações Neon Cyberpunk (Background)
+  [BLOCO 3] CSS: Componentes de UI Retrô (PS1 Panel)
+  [BLOCO 4] CSS: Comportamentos Dinâmicos (Navbar e Hero)
+  [BLOCO 5] HTML: Fundos Vetoriais (Neon) e Contêiner 3D
+  [BLOCO 6] HTML: Header Dinâmico, Logo e Subtítulo
+  [BLOCO 7] HTML: Seções de Conteúdo do GDD (Desacopladas)
+  [BLOCO 8] HTML: Rodapé (Footer)
+  [BLOCO 9] JS: Lógica de Scroll e Transições de Interface
+  [BLOCO 10] JS: Motor Gráfico 3D (Three.js WebGL)
+  [BLOCO 11] JS: Gráfico de Dados (Chart.js) e Boot
+  ========================================================================
+-->
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>OUSH NORDESTE 2076 - GDD Oficial</title>
+    <!-- Bibliotecas -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Fontes Retrô e Base -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,800;1,800&amp;family=Orbitron:wght@400;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ========================================================================
+           [BLOCO 1] CSS: Variáveis e Configurações Base
+           ======================================================================== */
+        :root {
+            /* PALETA OFICIAL OUSH */
+            --c-green: #066B06;
+            --c-red: #ED1923;
+            --c-yellow: #F8DB08;
+            --c-purple: #9A88AA;
+            --c-white: #FFFFFF;
+
+            /* Cores auxiliares derivadas para efeitos Rush */
+            --c-black: #000000;
+            --c-navy: #000033;
+            --c-panel-bg: rgba(0, 15, 50, 0.85);
+            --c-chrome-light: #55aaff;
+            --c-chrome-dark: #001133;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--c-navy);
+            font-family: 'Inter', sans-serif;
+            color: var(--c-white);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .font-rush {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Contêineres Base do Fundo */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -3;
+            image-rendering: pixelated;
+        }
+
+        /* ========================================================================
+           [BLOCO 3] CSS: Componentes de UI Retrô (Rush Panel)
+           ======================================================================== */
+        .rush-panel {
+            background:
+                linear-gradient(180deg, rgba(0, 15, 50, 0.9) 0%, rgba(0, 5, 20, 0.95) 100%) padding-box,
+                linear-gradient(to bottom, #ffffff 0%, #cfcfcf 10%, #7a7a7a 25%, #ffffff 50%, #555555 75%, #cccccc 90%, #000000 100%) border-box;
+            border: 4px solid transparent;
+            border-radius: 24px;
+            box-shadow:
+                0 10px 20px rgba(0, 0, 0, 0.7),
+                inset 0 4px 8px rgba(255, 255, 255, 0.3),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.6);
+            position: relative;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(6px);
+            overflow: hidden;
+            /* Mantém a barra de título contida */
+        }
+
+        .rush-title-bar {
+            background: linear-gradient(90deg, #0033aa 0%, #0066ff 50%, #0033aa 100%);
+            color: var(--c-white);
+            padding: 10px 24px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 4px solid transparent;
+            border-image: linear-gradient(to right, #7a7a7a 0%, #ffffff 50%, #7a7a7a 100%) 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .rush-title-bar.red {
+            background: linear-gradient(90deg, #aa0000 0%, #ff1111 50%, #aa0000 100%);
+            border-image: linear-gradient(to right, #550000, #ff8888, #550000) 1;
+        }
+
+        .rush-title-bar.green {
+            background: linear-gradient(90deg, #005500 0%, #00aa00 50%, #005500 100%);
+            border-image: linear-gradient(to right, #005500, #88ff88, #005500) 1;
+        }
+
+        .rush-title-bar.yellow {
+            background: linear-gradient(90deg, #aa8800 0%, #ffcc00 50%, #aa8800 100%);
+            border-image: linear-gradient(to right, #554400, #ffff88, #554400) 1;
+            color: #000;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .rush-title-bar.white {
+            background: linear-gradient(90deg, #666666 0%, #cccccc 50%, #666666 100%);
+            border-image: linear-gradient(to right, #333333, #ffffff, #333333) 1;
+            color: #000;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-rush-action {
+            display: inline-block;
+            background:
+                linear-gradient(180deg, #ffcc33 0%, #ddaa00 45%, #885500 55%, #ddaa00 100%) padding-box,
+                linear-gradient(to bottom, #ffffff 0%, #ffcc33 10%, #aa6600 25%, #ffffff 50%, #663300 75%, #cc8800 90%, #221100 100%) border-box;
+            color: var(--c-black);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 8px 24px;
+            border: 4px solid transparent;
+            border-radius: 9999px;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.6),
+                inset 0 4px 6px rgba(255, 255, 255, 0.6),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .btn-rush-action:active {
+            transform: scale(0.95) translateY(2px);
+            box-shadow:
+                0 2px 6px rgba(0, 0, 0, 0.6),
+                inset 0 2px 4px rgba(255, 255, 255, 0.6),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-rush-action:hover {
+            background:
+                linear-gradient(180deg, #ffee88 0%, #ffdd44 45%, #996600 55%, #ffdd44 100%) padding-box,
+                linear-gradient(to bottom, #ffffff 0%, #ffdd55 10%, #cc8800 25%, #ffffff 50%, #884400 75%, #ddaa00 90%, #331100 100%) border-box;
+            box-shadow:
+                0 8px 16px rgba(0, 0, 0, 0.7),
+                inset 0 4px 6px rgba(255, 255, 255, 0.8),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-rush-nav {
+            color: var(--c-white);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 6px 16px;
+            border: 2px solid transparent;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-rush-nav:hover {
+            background:
+                linear-gradient(180deg, rgba(0, 50, 150, 0.6) 0%, rgba(0, 20, 80, 0.8) 100%) padding-box,
+                linear-gradient(to bottom, #ffffff 0%, #cfcfcf 10%, #7a7a7a 25%, #ffffff 50%, #555555 75%, #cccccc 90%, #000000 100%) border-box;
+            border: 4px solid transparent;
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.6),
+                inset 0 3px 5px rgba(255, 255, 255, 0.3),
+                inset 0 -3px 5px rgba(0, 0, 0, 0.5);
+            margin: -2px;
+            /* Prevent layout shift */
+        }
+
+        /* --- ESTILOS DE CROMO E EFEITOS ESPECIAIS (V2) --- */
+        .chrome-bg-2 {
+            background: linear-gradient(180deg, #d4d4d4 0%, #8a8a8a 45%, #222222 50%, #000000 55%, #7a7a7a 100%);
+            border: 2px solid #555;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), inset 0 -2px 4px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .scanlines {
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px);
+        }
+
+        @keyframes bounce-down {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(10px);
+            }
+        }
+
+        .animate-bounce-down {
+            animation: bounce-down 1.5s infinite;
+        }
+
+        /* ========================================================================
+           [BLOCO 4] CSS: Comportamentos Dinâmicos (Navbar e Hero)
+           ======================================================================== */
+
+        /* Fundo escuro do Hero com Fade Out suave para legibilidade */
+        #hero-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 45%, transparent 80%);
+            transition: opacity 0.8s ease-in-out;
+            pointer-events: none;
+        }
+
+        #hero-overlay.hidden-overlay {
+            opacity: 0;
+        }
+
+        #game-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            z-index: 50;
+            background:
+                linear-gradient(180deg, rgba(0, 15, 50, 0.95) 0%, rgba(0, 5, 20, 0.98) 100%) padding-box,
+                linear-gradient(to bottom, #ffffff 0%, #7a7a7a 50%, #cccccc 100%) border-box;
+            border-bottom: 4px solid transparent;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        #game-nav.scrolled {
+            transform: translateY(0);
+        }
+
+        /* Elementos Animados com Origem Central (Previne salto brusco) */
+        #floating-logo,
+        #floating-subtitle {
+            position: fixed;
+            z-index: 60;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: center center;
+            will-change: transform, opacity;
+        }
+
+        #floating-logo {
+            cursor: pointer;
+        }
+
+        /* ESTADOS DO HERO (CENTRO DA TELA) */
+        .logo-hero {
+            top: 35vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            max-width: 650px;
+        }
+
+        .subtitle-hero {
+            top: 75vh;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: 90vw;
+            max-width: 550px;
+            opacity: 1;
+        }
+
+        /* ESTADOS DO MENU (TOPO DA TELA) */
+        .logo-nav {
+            top: 40px;
+            left: 100px;
+            transform: translate(-50%, -50%);
+            width: 160px;
+        }
+
+        .subtitle-nav {
+            top: 40px;
+            left: 200px;
+            transform: translate(0, -50%) scale(0.65);
+            transform-origin: left center;
+            opacity: 1;
+            /* Mantém o visual do botão, mas ajusta para o menu */
+            background:
+                linear-gradient(180deg, rgba(0, 10, 40, 0.9) 0%, rgba(0, 5, 20, 0.95) 100%) padding-box,
+                linear-gradient(to bottom, #ffffff 0%, #cfcfcf 10%, #7a7a7a 25%, #ffffff 50%, #555555 75%, #cccccc 90%, #000000 100%) border-box !important;
+            border: 4px solid transparent !important;
+            border-radius: 9999px !important;
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.6),
+                inset 0 4px 6px rgba(255, 255, 255, 0.4),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.6) !important;
+            padding: 8px 32px !important;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 1100px) {
+            .subtitle-nav {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--c-black);
+            border-left: 2px solid var(--c-purple);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--c-purple);
+            border: 2px solid var(--c-bevel-light);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--c-yellow);
+            border-color: var(--c-white);
+        }
+
+        /* Classes para a animação 3D dos Decks */
+        .card-deck-container {
+            perspective: 1200px;
+            position: relative;
+            width: 100%;
+            min-height: 350px;
+        }
+
+        .card-3d {
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-3d.flipping {
+            transform: rotateY(90deg);
+        }
+
+        /* --- NOVO ESTILO DE CARTAS TCG --- */
+        .card-tcg {
+            aspect-ratio: 2.5 / 3.5;
+            background: linear-gradient(135deg, #111 0%, #222 100%);
+            border: 8px solid #ddd;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-tcg.flipping {
+            transform: rotateY(90deg);
+        }
+
+        .card-tcg-header {
+            background: linear-gradient(90deg, var(--c-green) 0%, #003311 100%);
+            padding: 8px 12px;
+            border-bottom: 2px solid #fff;
+            margin: 4px;
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-tcg-image-area {
+            flex-grow: 1;
+            margin: 0 4px;
+            background: #000;
+            border: 2px solid #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-tcg-text {
+            background: #dedede;
+            color: #111;
+            margin: 4px;
+            padding: 12px;
+            border-radius: 0 0 4px 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            min-height: 100px;
+            border: 2px solid #555;
+        }
+
+        .nav-arrow {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #9ca3af;
+            /* border-gray-400 */
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.8), 0 4px 6px rgba(0, 0, 0, 0.6);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .nav-arrow:hover {
+            background: var(--c-yellow);
+            color: black;
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .nav-arrow:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+
+<body class="relative text-gray-200">
+    <!-- ========================================================================
+         [BLOCO 5] HTML: Fundos Vetoriais (Neon) e Contêiner 3D
+         ======================================================================== -->
+    <div id="canvas-container"></div>
+    <!-- Fundo de escurecimento suave para legibilidade do Logo -->
+    <div id="hero-overlay"></div>
+    <!-- ========================================================================
+         [BLOCO 6] HTML: Header Dinâmico, Logo e Subtítulo
+         ======================================================================== -->
+    <img alt="OUSH Nordeste Logo" class="logo-hero" id="floating-logo" onclick="window.scrollTo(0,0)"
+        src="https://github.com/poligonalhub/poligonalhub/blob/main/oush/OUSHcolorido.png?raw=true" />
+    <div class="subtitle-hero rush-panel px-8 py-4 text-center rounded-full flex flex-col justify-center items-center"
+        id="floating-subtitle" style="margin-bottom: 0;">
+        <h2 class="font-rush text-2xl md:text-3xl text-white drop-shadow-[2px_2px_0px_#000]">550 km Nordeste adentro
+        </h2>
+        <p class="font-rush text-lg md:text-xl text-[var(--c-yellow)] drop-shadow-[2px_2px_0px_#000]">seguindo o
+            Primeiro Sol.</p>
+    </div>
+    <!-- Indicador de Scroll Animado (Bottom Hero) -->
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-20 transition-opacity duration-500 pointer-events-none"
+        id="scroll-indicator">
+        <div class="flex flex-col items-center justify-center p-2 rounded-lg">
+            <div
+                class="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center shadow-[0_0_10px_rgba(0,0,0,0.8)] backdrop-blur-sm bg-black/30">
+                <div class="w-1 h-3 bg-white rounded-full mt-1 animate-bounce-down"></div>
+            </div>
+        </div>
+    </div>
+    <nav class="flex items-center justify-end px-4" id="game-nav">
+        <div
+            class="flex items-center gap-2 md:gap-4 overflow-x-auto hide-scrollbar pl-[180px] md:pl-[200px] w-full justify-end">
+            <a class="btn-rush-nav" href="#visao-geral">VISÃO GERAL</a>
+            <a class="btn-rush-nav text-[var(--c-green)]" href="#recursos">RECURSOS</a>
+            <a class="btn-rush-nav text-[var(--c-red)]" href="#modos">MODOS</a>
+            <a class="btn-rush-nav text-[var(--c-white)]" href="#rota">ROTA</a>
+            <a class="btn-rush-nav text-[var(--c-purple)]" href="#mercado">MERCADO</a>
+            <a class="btn-rush-action ml-2 whitespace-nowrap" href="http://poligonalhub.com" target="_blank">POLIGONAL
+                HUB</a>
+        </div>
+    </nav>
+    <!-- ========================================================================
+         [BLOCO 7] HTML: Seções de Conteúdo do GDD (Desacopladas)
+         ======================================================================== -->
+    <main
+        class="relative z-10 w-full pt-[40vh] pb-20 opacity-0 translate-y-12 transition-all duration-1000 ease-out pointer-events-none"
+        id="main-content">
+        <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+            <!-- ========================================================================
+                 ESCOPO GDD
+                 ======================================================================== -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8" id="game-scope-container">
+                <!-- SECTION: Visão Geral -->
+                <section class="rush-panel scroll-mt-28 md:col-span-12" id="visao-geral">
+                    <div
+                        class="chrome-bg-2 p-2 px-6 text-white font-rush text-xl text-center shadow-inner uppercase tracking-widest rounded-t-xl">
+                        Visão Geral
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <p class="text-lg leading-relaxed text-gray-300 font-bold">
+                            <span class="text-white">OUSH NORDESTE 2076</span> é um jogo de corrida e ação que segue a
+                            insana corrida de rua que começa com o primeiro sol em Cabo Branco e segue uma rota de <span
+                                class="text-[var(--c-yellow)]">550 km adentro do estado da Paraíba</span>. Novas rotas
+                            por Pernambuco e Rio Grande do Norte virão pós-lançamento. Cada estágio exibe a exuberância
+                            geográfica do Nordeste. O jogo terá uma Campanha (Rally de Rua), Circuitos e modo Combate
+                            para até 4 jogadores em tela dividida (coop local).
+                        </p>
+                        <div class="mt-8 flex gap-4">
+                            <div
+                                class="px-4 py-2 bg-black/60 border border-gray-700 rounded-full flex items-center gap-2 shadow-inner">
+                                <span
+                                    class="font-bold text-[var(--c-red)] text-xl border-2 border-[var(--c-red)] rounded px-1">12+</span>
+                                <span class="text-sm font-rush text-gray-400">Classificação</span>
+                            </div>
+                            <div
+                                class="px-4 py-2 bg-black/60 border border-gray-700 rounded-full flex items-center gap-2 shadow-inner">
+                                <span class="font-rush text-xs text-[var(--c-green)]">PLATAFORMA</span>
+                                <span class="font-rush text-lg text-white">PC</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION: Recursos -->
+                <section class="rush-panel scroll-mt-28 flex flex-col md:col-span-12 max-w-2xl justify-self-center w-full" id="recursos">
+                    <div
+                        class="chrome-bg-2 p-2 px-6 text-white font-rush text-xl text-center shadow-inner uppercase tracking-widest rounded-t-xl text-[var(--c-green)]">
+                        Recursos Principais
+                    </div>
+                    <div class="p-6 md:p-8 flex flex-col gap-6 items-center flex-grow justify-center">
+                        <div class="flex items-center justify-center gap-2 py-4 w-full h-full relative overflow-hidden">
+                            <button aria-label="Anterior" class="nav-arrow z-20"
+                                onclick="navCard('recursos', -1)">◀</button>
+                            <div class="card-tcg w-56 cursor-pointer z-10" id="recursos-card"
+                                onclick="navCard('recursos', 1)">
+                                <div class="card-tcg-header relative">
+                                    <span class="font-rush text-xs text-white">Recurso</span>
+                                    <span class="font-rush text-xs text-[var(--c-yellow)]"
+                                        id="recursos-card-count">01/04</span>
+                                </div>
+                                <div class="card-tcg-image-area p-0 overflow-hidden relative">
+                                    <div class="absolute inset-0 bg-black" id="recursos-card-bg"></div>
+                                    <div class="z-10 flex items-center justify-center w-full h-full"
+                                        id="recursos-card-icon">...</div>
+                                    <!-- Badge Target -->
+                                    <div class="absolute top-2 right-2 px-2 py-1 font-rush text-[8px] font-bold tracking-widest shadow-lg rounded z-20"
+                                        id="recursos-card-badge" style="display:none;"></div>
+                                </div>
+                                <div
+                                    class="card-tcg-text flex flex-col justify-center scanlines bg-black/90 p-4 border-t-2 border-gray-600">
+                                    <h4 class="font-rush font-bold text-sm mb-2 text-white drop-shadow-[0_0_5px_var(--c-chrome-light)]"
+                                        id="recursos-card-title">
+                                        RALLY NORDESTINO</h4>
+                                    <p class="text-xs leading-tight text-gray-300 font-medium" id="recursos-card-desc">
+                                        Corra por diversas cidades reais com clima e hora dinâmicos ao longo do sertão e
+                                        litoral.</p>
+                                </div>
+                            </div>
+                            <button aria-label="Próximo" class="nav-arrow z-20"
+                                onclick="navCard('recursos', 1)">▶</button>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION: Modos de Jogo -->
+                <section class="rush-panel scroll-mt-28 flex flex-col md:col-span-12 max-w-2xl justify-self-center w-full" id="modos">
+                    <div
+                        class="chrome-bg-2 p-2 px-6 text-white font-rush text-xl text-center shadow-inner uppercase tracking-widest rounded-t-xl text-[var(--c-yellow)]">
+                        Modos de Jogo
+                    </div>
+                    <div class="p-6 md:p-8 flex flex-col gap-6 items-center flex-grow justify-center">
+                        <div class="flex items-center justify-center gap-2 py-4 w-full h-full relative overflow-hidden">
+                            <button aria-label="Anterior" class="nav-arrow z-20"
+                                onclick="navCard('modos', -1)">◀</button>
+                            <div class="card-tcg w-56 cursor-pointer z-10" id="modos-card"
+                                onclick="navCard('modos', 1)">
+                                <div class="card-tcg-header relative">
+                                    <span class="font-rush text-xs text-white">Modo</span>
+                                    <span class="font-rush text-xs text-[var(--c-yellow)]"
+                                        id="modos-card-count">01/03</span>
+                                </div>
+                                <div class="card-tcg-image-area p-0 overflow-hidden relative">
+                                    <div class="absolute inset-0 bg-black" id="modos-card-bg"></div>
+                                    <div class="z-10 flex items-center justify-center w-full h-full"
+                                        id="modos-card-icon">...</div>
+                                    <!-- Badge Target -->
+                                    <div class="absolute top-2 right-2 px-2 py-1 font-rush text-[8px] font-bold tracking-widest shadow-lg rounded z-20"
+                                        id="modos-card-badge" style="display:none;"></div>
+                                </div>
+                                <div
+                                    class="card-tcg-text flex flex-col justify-center scanlines bg-black/90 p-4 border-t-2 border-gray-600">
+                                    <h4 class="font-rush font-bold text-sm mb-2 text-white drop-shadow-[0_0_5px_var(--c-chrome-light)]"
+                                        id="modos-card-title">
+                                        RALLY DE RUA</h4>
+                                    <p class="text-xs leading-tight text-gray-300 font-medium" id="modos-card-desc">
+                                        Jornada de 550 km. Corridas ponto A ao B seguindo um percurso lógico da Paraíba.
+                                    </p>
+                                </div>
+                            </div>
+                            <button aria-label="Próximo" class="nav-arrow z-20" onclick="navCard('modos', 1)">▶</button>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION: Categorias Veiculares -->
+                <section class="rush-panel scroll-mt-28 flex flex-col md:col-span-12 max-w-2xl justify-self-center w-full" id="categorias">
+                    <div
+                        class="chrome-bg-2 p-2 px-6 text-white font-rush text-xl text-center shadow-inner uppercase tracking-widest rounded-t-xl text-[var(--c-purple)]">
+                        Categorias Veiculares
+                    </div>
+                    <div class="p-6 md:p-8 flex flex-col gap-6 items-center flex-grow justify-center">
+                        <div class="flex justify-center gap-4 py-4 w-full h-full items-center relative overflow-hidden">
+                            <button aria-label="Anterior" class="nav-arrow z-20"
+                                onclick="navCard('categorias', -1)">◀</button>
+                            <div class="card-tcg w-56 md:w-64 cursor-pointer z-10" id="categorias-card"
+                                onclick="navCard('categorias', 1)">
+                                <div class="card-tcg-header relative">
+                                    <span class="font-rush text-xs text-white">Veículo</span>
+                                    <span class="font-rush text-xs text-[var(--c-yellow)]"
+                                        id="categorias-card-count">01/04</span>
+                                </div>
+                                <div class="card-tcg-image-area p-0 overflow-hidden relative">
+                                    <div class="absolute inset-0 bg-black" id="categorias-card-bg"></div>
+                                    <div class="z-10 flex items-center justify-center w-full h-full"
+                                        id="categorias-card-icon">...</div>
+                                    <!-- Badge Target -->
+                                    <div class="absolute top-2 right-2 px-2 py-1 font-rush text-[8px] font-bold tracking-widest shadow-lg rounded z-20"
+                                        id="categorias-card-badge" style="display:none;"></div>
+                                </div>
+                                <div
+                                    class="card-tcg-text flex flex-col justify-center scanlines bg-black/90 p-4 border-t-2 border-gray-600">
+                                    <h4 class="font-rush font-bold text-sm mb-2 text-white drop-shadow-[0_0_5px_var(--c-chrome-light)]"
+                                        id="categorias-card-title">
+                                        EXÓTICOS</h4>
+                                    <p class="text-xs leading-tight text-gray-300 font-medium"
+                                        id="categorias-card-desc">Veículos de maior
+                                        desempenho, mais difíceis de dominar. Baixa resistência.</p>
+                                </div>
+                            </div>
+                            <button aria-label="Próximo" class="nav-arrow z-20"
+                                onclick="navCard('categorias', 1)">▶</button>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION: Rota da Campanha -->
+                <section class="rush-panel scroll-mt-28 md:col-span-12" id="rota">
+                    <div
+                        class="chrome-bg-2 p-2 px-6 text-white font-rush text-xl text-center shadow-inner uppercase tracking-widest rounded-t-xl">
+                        ROTA E ARENAS
+                    </div>
+                    <div class="p-6 md:p-8 flex flex-col md:flex-row gap-8">
+                        <div class="w-full md:w-1/3 space-y-6">
+                            <div
+                                class="bg-black/40 p-4 border border-gray-700 rounded-lg shadow-inner hover:border-gray-500 transition-colors">
+                                <div class="flex items-center justify-between gap-2 mb-3">
+                                    <p class="font-rush text-[var(--c-yellow)] text-xl">PB / SUL</p>
+                                    <span
+                                        class="px-2 py-1 bg-gray-300 text-black font-rush text-[8px] font-bold tracking-widest shadow-lg rounded">CORTE
+                                        VERTICAL</span>
+                                </div>
+                                <p class="text-xs text-gray-300 mb-3 leading-relaxed">Nessa modalidade as corridas vão
+                                    do ponto A ao ponto B
+                                    e seguem um percurso geográfico lógico. Vencer desbloqueia novas rotas, modos e
+                                    carros.</p>
+                                <ul
+                                    class="text-white font-rush space-y-2 border-l-2 border-dashed border-yellow-600 pl-4 mt-4">
+                                    <li class="flex items-center gap-2 text-sm"><span
+                                            class="w-2 h-2 rounded-full bg-[var(--c-yellow)]"></span> Parahyba</li>
+                                    <li class="flex items-center gap-2 text-sm"><span
+                                            class="w-2 h-2 rounded-full bg-[var(--c-yellow)]"></span> Areia</li>
+                                    <li class="flex items-center gap-2 text-sm"><span
+                                            class="w-2 h-2 rounded-full bg-[var(--c-yellow)]"></span> Ingá</li>
+                                </ul>
+                            </div>
+                            <div
+                                class="bg-black/40 p-4 border border-gray-700 rounded-lg shadow-inner hover:border-gray-500 transition-colors">
+                                <div class="flex items-center justify-between gap-2 mb-3">
+                                    <p class="font-rush text-gray-400 text-xl">CONGO &gt; SOUSA</p>
+                                    <span
+                                        class="px-2 py-1 bg-yellow-600 text-black font-rush text-[8px] font-bold tracking-widest shadow-lg rounded">VERSÃO
+                                        1.0</span>
+                                </div>
+                                <p class="text-xs text-gray-400 leading-relaxed mb-3">Continuação lógica da rota
+                                    principal (Jogo Completo).
+                                </p>
+                            </div>
+                            <div
+                                class="bg-black/40 p-4 border border-gray-700 rounded-lg shadow-inner hover:border-gray-500 transition-colors">
+                                <div class="flex items-center justify-between gap-2 mb-3">
+                                    <p class="font-rush text-[var(--c-green)] text-xl">CIRCUITO</p>
+                                    <span
+                                        class="px-2 py-1 bg-yellow-600 text-black font-rush text-[8px] font-bold tracking-widest shadow-lg rounded">VERSÃO
+                                        1.0</span>
+                                </div>
+                                <p class="text-xs text-gray-400 leading-relaxed mb-3">Bots / PVP. Pistas circulares para corridas com voltas.</p>
+                                <ul class="text-gray-500 font-rush space-y-2 border-l-2 border-dashed border-green-900 pl-4 mt-4">
+                                    <li class="flex items-center gap-2 text-sm"><span class="w-2 h-2 rounded-full bg-green-800"></span> Rota 001 BRs</li>
+                                </ul>
+                            </div>
+                            <div
+                                class="bg-black/40 p-4 border border-gray-700 rounded-lg shadow-inner hover:border-gray-500 transition-colors">
+                                <div class="flex items-center justify-between gap-2 mb-3">
+                                    <p class="font-rush text-[var(--c-red)] text-xl">ARENAS COMBATE</p>
+                                    <span
+                                        class="px-2 py-1 bg-yellow-600 text-black font-rush text-[8px] font-bold tracking-widest shadow-lg rounded">VERSÃO
+                                        1.0</span>
+                                </div>
+                                <p class="text-xs text-gray-400 leading-relaxed mb-3">Projetadas para batalhas armadas
+                                    (Free-for-All, Duplas,
+                                    Evolve).</p>
+                                <ul
+                                    class="text-gray-500 font-rush space-y-2 border-l-2 border-dashed border-red-900 pl-4 mt-4">
+                                    <li class="flex items-center gap-2 text-sm"><span
+                                            class="w-2 h-2 rounded-full bg-red-800"></span> Parque do Povo</li>
+                                    <li class="flex items-center gap-2 text-sm"><span
+                                            class="w-2 h-2 rounded-full bg-red-800"></span> CIMEPAR</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div
+                            class="w-full md:w-2/3 min-h-[300px] border-4 border-[var(--c-chrome-light)] rounded-2xl bg-black relative p-1 shadow-[0_0_0_3px_var(--c-chrome-dark),inset_0_4px_6px_rgba(255,255,255,0.3),inset_0_-4px_6px_rgba(0,0,0,0.5)] overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.1)_1px,transparent_1px)] bg-[length:100%_4px] pointer-events-none z-10">
+                            </div>
+                            <iframe allowfullscreen=""
+                                class="absolute inset-0 filter invert-[100%] hue-rotate-180 contrast-125 opacity-70 grayscale"
+                                height="100%" loading="lazy"
+                                src="https://www.google.com/maps/d/embed?mid=1qS8d8-RpHeIhAt318Uzx90fDc3pFEe4"
+                                style="border:0;" width="100%"></iframe>
+                        </div>
+                    </div>
+                </section>
+                <!-- SECTION: Mercado -->
+                <section class="rush-panel scroll-mt-28 md:col-span-12" id="mercado">
+                    <div
+                        class="chrome-bg-2 p-2 px-6 text-white font-rush text-xl text-center shadow-inner uppercase tracking-widest rounded-t-xl">
+                        Análise de Mercado
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <div class="flex flex-col lg:flex-row gap-8 items-start">
+                            <div
+                                class="relative w-full lg:w-1/2 h-[400px] bg-black/50 border-2 border-[var(--c-chrome-light)] rounded-2xl p-4 shadow-[0_0_0_3px_var(--c-chrome-dark),inset_0_4px_6px_rgba(255,255,255,0.3),inset_0_-4px_6px_rgba(0,0,0,0.5)]">
+                                <canvas id="competitorChart"></canvas>
+                            </div>
+                            <div class="w-full lg:w-1/2 flex flex-col flex-grow items-center justify-center">
+                                <div
+                                    class="flex justify-center gap-2 md:gap-6 py-4 w-full h-full items-center relative overflow-hidden">
+                                    <button aria-label="Anterior" class="nav-arrow z-20"
+                                        onclick="navCard('mercado', -1)">◀</button>
+                                    <div class="card-tcg w-56 md:w-64 cursor-pointer z-10" id="mercado-card"
+                                        onclick="navCard('mercado', 1)">
+                                        <div class="card-tcg-header">
+                                            <span class="font-rush text-xs text-white">Mercado</span>
+                                            <span class="font-rush text-xs text-[var(--c-yellow)]"
+                                                id="mercado-card-count">01/05</span>
+                                        </div>
+                                        <div class="card-tcg-image-area p-0 overflow-hidden relative">
+                                            <div class="absolute inset-0 bg-black" id="mercado-card-bg"></div>
+                                            <div class="text-[var(--c-yellow)] opacity-80 z-10 flex items-center justify-center w-full h-full p-2 text-center text-xs font-rush font-bold"
+                                                id="mercado-card-icon">
+                                                INSIRA SUA IMAGEM 600X600 AQUI</div>
+                                        </div>
+                                        <div
+                                            class="card-tcg-text flex flex-col justify-start overflow-y-auto scanlines bg-black/90 p-2 border-t-2 border-gray-600">
+                                            <h4 class="font-rush font-bold text-sm mb-2 text-white drop-shadow-[0_0_5px_var(--c-chrome-light)]"
+                                                id="mercado-card-title">
+                                                RUSH 2049 (1999)</h4>
+                                            <div class="text-[10px] leading-tight text-gray-300 font-medium flex-col gap-1"
+                                                id="mercado-card-desc">
+                                                <b>REF:</b> Adoção das mecânicas de circuito e combate, pistas com
+                                                segredos.
+                                                Gameplay arcade puro.<br /><br /><b>DIF:</b> OUSH NE 2076 se diferencia
+                                                por
+                                                uma
+                                                direção de arte regional.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button aria-label="Próximo" class="nav-arrow z-20"
+                                        onclick="navCard('mercado', 1)">▶</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div> <!-- End of Scope -->
+        </div> <!-- End of Container -->
+        <!-- ========================================================================
+             [BLOCO 8] HTML: Rodapé (Footer)
+             ======================================================================== -->
+        <footer class="mt-20 text-center pb-12 relative z-10 flex flex-col justify-center items-center gap-4">
+            <a class="btn-rush-action flex flex-col items-center justify-center gap-1" href="http://poligonalhub.com"
+                style="padding: 16px 48px;" target="_blank">
+                <span style="font-size: 1.5rem; line-height: 1.2;">POLIGONAL HUB</span>
+                <span class="font-rush text-[var(--c-black)] text-xs opacity-80" style="text-shadow: none;">
+                    ©
+                    <script>document.write(/\d{4}/.exec(Date())[0])</script>
+                </span>
+            </a>
+        </footer>
+    </main>
+    <script>
+        /* ========================================================================
+           [BLOCO 9] JS: Lógica de Interface
+           ======================================================================== */
+
+        // --- Deck Data for 3D Cards ---
+        const deckData = {
+            recursos: [
+                {
+                    title: "RALLY NORDESTINO",
+                    desc: "Corra por diversas cidades reais com clima e hora dinâmicos ao longo do sertão e litoral.",
+                    color: "var(--c-green)",
+                    icon: "LABEL"
+                },
+                {
+                    title: "PISTAS FRENÉTICAS",
+                    desc: "O design das pistas é focado em múltiplos atalhos, saltos extremos e trechos dinâmicos.",
+                    color: "var(--c-red)",
+                    icon: "LABEL"
+                },
+                {
+                    title: "FROTA POPULAR",
+                    desc: "Pilote carros icônicos do imaginário popular brasileiro (Amaral, Cuska, Oni, Tonby).",
+                    color: "var(--c-yellow)",
+                    icon: "LABEL"
+                },
+                {
+                    title: "DANO REAL",
+                    desc: "Direção ofensiva é a chave. Capotou? Meteu a fuça no poste? Explodiu! Danos afetam a performance.",
+                    color: "var(--c-purple)",
+                    icon: "LABEL"
+                }
+            ],
+            modos: [
+                {
+                    title: "RALLY DE RUA",
+                    desc: "Campanha — Bots / PVP.<br>Uma jornada 550 km Paraíba adentro. Corridas de ponto A ao ponto B seguindo um percurso geográfico lógico.",
+                    color: "var(--c-yellow)",
+                    badge: "CORTE VERTICAL",
+                    badgeColor: "bg-gray-300 text-black",
+                    icon: "LABEL"
+                },
+                {
+                    title: "CIRCUITO (1.0)",
+                    desc: "Bots / PVP.<br>Pistas circulares para corridas com voltas definidas. (Ex: BR-101, Rodovias principais).",
+                    color: "var(--c-green)",
+                    badge: "VERSÃO 1.0",
+                    badgeColor: "bg-yellow-600 text-black",
+                    icon: "LABEL"
+                },
+                {
+                    title: "COMBATE (1.0)",
+                    desc: "Até 4 jogadores tela dividida.<br>Arenas armadas em modos Free-for-All, Duplas ou o caótico Evolve (1x3).",
+                    color: "var(--c-red)",
+                    badge: "VERSÃO 1.0",
+                    badgeColor: "bg-yellow-600 text-black",
+                    icon: "LABEL"
+                }
+            ],
+            categorias: [
+                {
+                    title: "EXÓTICOS",
+                    desc: "Veículos de maior desempenho, mais difíceis de dominar. Baixa resistência.",
+                    color: "var(--c-purple)",
+                    icon: "LABEL"
+                },
+                {
+                    title: "POTENTES",
+                    desc: "Veículos de aceleração mais rápida em detrimento da velocidade máxima e dirigibilidade. Média resistência.",
+                    color: "var(--c-red)",
+                    icon: "LABEL"
+                },
+                {
+                    title: "MODIFICADOS",
+                    desc: "A dirigibilidade mais responsiva e maior aderência em detrimento da velocidade máxima. Baixa resistência.",
+                    color: "var(--c-green)",
+                    icon: "LABEL"
+                },
+                {
+                    title: "TANQUES",
+                    desc: "Todo mediano. Alta resistência. Forjados para o combate, mas também correm.",
+                    color: "var(--c-yellow)",
+                    icon: "LABEL"
+                }
+            ],
+            mercado: [
+                {
+                    title: "RUSH 2049 (1999)",
+                    desc: "<b>REF:</b> Adoção das mecânicas de circuito e combate, pistas com segredos. Gameplay arcade puro.<br><br><b>DIF:</b> OUSH NE 2076 se diferencia por uma direção de arte regional (glocal). Trilha sonora funde rock e forró.",
+                    color: "var(--c-yellow)"
+                },
+                {
+                    title: "DESTRUCTION DERBY (1995)",
+                    desc: "<b>REF:</b> Sistema de colisão complexo e texturização low-poly como base estilística.<br><br><b>DIF:</b> A jogabilidade de OUSH será fluida e responsiva, evitando a rigidez dos controles da era MS-DOS.",
+                    color: "var(--c-purple)"
+                },
+                {
+                    title: "DIRT SHOWDOWN (2012)",
+                    desc: "<b>REF:</b> Level design, variedade de modos de jogo e a inclusão de um modo focado em destruição.<br><br><b>DIF:</b> O projeto se afasta do realismo visual e de jogabilidade, optando por uma abordagem estilizada e arcade.",
+                    color: "var(--c-red)"
+                },
+                {
+                    title: "FLATOUT 2 (2006)",
+                    desc: "<b>REF:</b> Foco na direção agressiva como mecânica central e um sistema de destruição satisfatório.<br><br><b>DIF:</b> OUSH se distingue por meio de uma identidade visual e sonora única regional.",
+                    color: "var(--c-white)"
+                },
+                {
+                    title: "VIGILANTE 8 (1998)",
+                    desc: "<b>REF:</b> Clássico do combate veicular é uma das referências principais para o modo combate.<br><br><b>DIF:</b> OUSH transcende o combate trazendo mais modos (corrida), carros e segredos.",
+                    color: "var(--c-green)"
+                }
+            ]
+        };
+
+        const cardIndices = {
+            recursos: 0,
+            modos: 0,
+            categorias: 0,
+            mercado: 0
+        };
+
+        function navCard(section, dir) {
+            const maxIndex = deckData[section].length;
+            cardIndices[section] = (cardIndices[section] + dir + maxIndex) % maxIndex;
+            const index = cardIndices[section];
+
+            const card = document.getElementById(section + '-card');
+            const titleEl = document.getElementById(section + '-card-title');
+            const descEl = document.getElementById(section + '-card-desc');
+            const countEl = document.getElementById(section + '-card-count');
+            const iconEl = document.getElementById(section + '-card-icon');
+            const bgEl = document.getElementById(section + '-card-bg');
+            const imageArea = card.querySelector('.card-tcg-image-area');
+
+            // Find or create badge container
+            let badgeEl = document.getElementById(section + '-card-badge');
+            if (!badgeEl) {
+                badgeEl = document.createElement('div');
+                badgeEl.id = section + '-card-badge';
+                badgeEl.className = 'absolute top-2 right-2 px-2 py-1 font-rush text-[8px] font-bold tracking-widest shadow-lg rounded z-20';
+                imageArea.appendChild(badgeEl);
+            }
+
+
+
+            // Start 3D Flip
+            card.classList.add('flipping');
+
+            setTimeout(() => {
+                const data = deckData[section][index];
+
+                titleEl.innerHTML = data.title;
+                descEl.innerHTML = data.desc;
+
+                // Update pagination count
+                countEl.innerHTML = `0${index + 1}/0${maxIndex}`;
+
+                // Update visual colors dynamically
+                bgEl.style.background = `radial-gradient(ellipse at center, ${data.color} 0%, #000 70%)`;
+
+                if (data.icon === "LABEL") {
+                    iconEl.innerHTML = `<div class="text-center text-xl font-rush font-bold opacity-80 uppercase transform rotate-[-15deg] leading-tight">` + data.title.replace(' ', '<br>') + `</div>`;
+                    iconEl.style.color = data.color;
+                } else if (data.icon) {
+                    iconEl.innerHTML = data.icon;
+                    iconEl.style.color = data.color;
+                } else if (section === 'mercado') {
+                    iconEl.innerHTML = `<div class="text-center text-xs font-rush font-bold opacity-50">INSIRA SUA IMAGEM 600X600 AQUI</div>`;
+                    iconEl.style.color = data.color;
+                }
+
+                // Handle Badge
+                if (data.badge) {
+                    badgeEl.style.display = 'block';
+                    badgeEl.innerHTML = data.badge;
+                    badgeEl.className = `absolute top-2 right-2 px-2 py-1 font-rush text-[8px] font-bold tracking-widest shadow-lg rounded z-20 ${data.badgeColor}`;
+                } else {
+                    badgeEl.style.display = 'none';
+                }
+
+                card.classList.remove('flipping');
+            }, 200);
+
+            // Ghost Cards Logic
+            const prevIndex = (index - 1 + maxIndex) % maxIndex;
+            const nextIndex = (index + 1) % maxIndex;
+            const prevData = deckData[section][prevIndex];
+            const nextData = deckData[section][nextIndex];
+
+            function createGhostCard(data) {
+                let iconHtml = '';
+                if (data.icon === "LABEL") {
+                    iconHtml = `<div class="text-center text-sm font-rush font-bold opacity-50 uppercase transform rotate-[-15deg] leading-tight" style="color: ${data.color}">` + data.title.replace(' ', '<br>') + `</div>`;
+                }
+                return '<div class="w-40 h-56 opacity-30 scale-75 blur-[1px] pointer-events-none hidden md:flex flex-col justify-end p-2 border-2 border-gray-600 rounded-xl relative overflow-hidden transition-all duration-300" style="background: radial-gradient(ellipse at center, ' + data.color + ' 0%, #000 70%);">' +
+                    (iconHtml ? '<div class="absolute inset-0 flex items-center justify-center pointer-events-none">' + iconHtml + '</div>' : '') +
+                    '<div class="z-10 bg-black/80 p-1 border-t border-gray-500 rounded text-center"><span class="font-rush text-[10px] text-white">' + data.title + '</span></div>' +
+                    '</div>';
+            }
+
+            let ghostLeft = document.getElementById(section + '-ghost-left');
+            if (!ghostLeft) {
+                ghostLeft = document.createElement('div');
+                ghostLeft.id = section + '-ghost-left';
+                ghostLeft.className = 'absolute left-0 z-0';
+                card.parentNode.appendChild(ghostLeft);
+            }
+            ghostLeft.innerHTML = deckData[section].length > 1 ? createGhostCard(prevData) : '';
+
+            let ghostRight = document.getElementById(section + '-ghost-right');
+            if (!ghostRight) {
+                ghostRight = document.createElement('div');
+                ghostRight.id = section + '-ghost-right';
+                ghostRight.className = 'absolute right-0 z-0';
+                card.parentNode.appendChild(ghostRight);
+            }
+            ghostRight.innerHTML = deckData[section].length > 1 ? createGhostCard(nextData) : '';
+
+        }
+
+        // Initialize cards on load
+        window.addEventListener('DOMContentLoaded', () => {
+            ['recursos', 'modos', 'categorias', 'mercado'].forEach(sec => navCard(sec, 0));
+        });
+
+        const nav = document.getElementById('game-nav');
+        const floatingLogo = document.getElementById('floating-logo');
+        const floatingSubtitle = document.getElementById('floating-subtitle');
+        const heroOverlay = document.getElementById('hero-overlay');
+        const mainContent = document.getElementById('main-content');
+        const scrollIndicator = document.getElementById('scroll-indicator');
+
+        let isScrolling = false;
+
+        window.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                window.requestAnimationFrame(() => {
+                    if (window.scrollY > 50) {
+                        // Entra menu
+                        nav.classList.add('scrolled');
+                        heroOverlay.classList.add('hidden-overlay');
+                        if (scrollIndicator) scrollIndicator.classList.add('opacity-0');
+
+                        // Revela o conteúdo da página
+                        mainContent.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+                        mainContent.classList.add('opacity-100', 'translate-y-0');
+
+                        // Redimensiona o Logo
+                        floatingLogo.classList.remove('logo-hero');
+                        floatingLogo.classList.add('logo-nav');
+
+                        // Mutações Subtítulo
+                        floatingSubtitle.classList.remove('subtitle-hero');
+                        floatingSubtitle.classList.add('subtitle-nav');
+                    } else {
+                        nav.classList.remove('scrolled');
+                        heroOverlay.classList.remove('hidden-overlay');
+                        if (scrollIndicator) scrollIndicator.classList.remove('opacity-0');
+
+                        // Oculta o conteúdo da página
+                        mainContent.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
+                        mainContent.classList.remove('opacity-100', 'translate-y-0');
+
+                        // Volta o Logo
+                        floatingLogo.classList.remove('logo-nav');
+                        floatingLogo.classList.add('logo-hero');
+
+                        // Volta o Subtítulo
+                        floatingSubtitle.classList.remove('subtitle-nav');
+                        floatingSubtitle.classList.add('subtitle-hero');
+                    }
+                    isScrolling = false;
+                });
+                isScrolling = true;
+            }
+        }, { passive: true });
+
+        /* ========================================================================
+           [BLOCO 10] JS: Motor Gráfico 3D (Three.js WebGL)
+           ======================================================================== */
+        const Config = {
+            colors: ['#000000', '#FFFFFF'],
+            waveSpeed: 1.2,
+            waveAmplitude: 1.0,
+            waveFrequency: 0.25,
+            resolution: 256,
+            jitterFactor: 5
+        };
+
+        class TextureGenerator {
+            static createCheckerboard() {
+                const canvas = document.createElement('canvas');
+                canvas.width = Config.resolution;
+                canvas.height = Config.resolution;
+                const ctx = canvas.getContext('2d');
+                const squares = 12;
+                const sqSize = canvas.width / squares;
+
+                for (let i = 0; i < squares; i++) {
+                    for (let j = 0; j < squares; j++) {
+                        ctx.fillStyle = ((i + j) % 2 === 0) ? Config.colors[1] : Config.colors[0];
+                        ctx.fillRect(Math.floor(i * sqSize), Math.floor(j * sqSize), Math.ceil(sqSize), Math.ceil(sqSize));
+                    }
+                }
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.magFilter = THREE.NearestFilter;
+                texture.minFilter = THREE.NearestFilter;
+                texture.generateMipmaps = false;
+                texture.repeat.set(2, 1);
+                return texture;
+            }
+        }
+
+        class PS1BackgroundScene {
+            constructor() {
+                this.container = document.getElementById('canvas-container');
+                this.clock = new THREE.Clock();
+                this.lastFrameTime = 0;
+                this.setupScene();
+                this.setupMesh();
+                window.addEventListener('resize', () => this.onResize(), false);
+            }
+
+            setupScene() {
+                this.scene = new THREE.Scene();
+                this.scene.fog = new THREE.FogExp2(0x000000, 0.02);
+                this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+                this.camera.position.set(0, -5, 20);
+                this.camera.lookAt(0, 0, 0);
+
+                this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "high-performance" });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(1);
+                this.renderer.setClearColor(0x000000, 1);
+                this.container.appendChild(this.renderer.domElement);
+
+                this.scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+                directionalLight.position.set(5, 5, 10);
+                this.scene.add(directionalLight);
+            }
+
+            setupMesh() {
+                const geometry = new THREE.PlaneGeometry(50, 30, 32, 24);
+                const texture = TextureGenerator.createCheckerboard();
+                const material = new THREE.MeshStandardMaterial({
+                    map: texture,
+                    side: THREE.DoubleSide,
+                    roughness: 1.0,
+                    metalness: 0.0,
+                    flatShading: true
+                });
+                this.flagMesh = new THREE.Mesh(geometry, material);
+                this.flagMesh.rotation.x = -Math.PI / 8;
+                this.scene.add(this.flagMesh);
+            }
+
+            onResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            renderLoop() {
+                requestAnimationFrame(() => this.renderLoop());
+
+                const now = Date.now();
+                if (now - this.lastFrameTime < 33) return; // Trava o FPS em ~30 para otimização extrema e estética PS1
+                this.lastFrameTime = now;
+
+                let time = this.clock.getElapsedTime();
+                const position = this.flagMesh.geometry.attributes.position;
+
+                const { waveFrequency, waveSpeed, waveAmplitude, jitterFactor } = Config;
+                const tSpeed = time * waveSpeed;
+                const tSpeed08 = time * waveSpeed * 0.8;
+                const tSpeed15 = time * waveSpeed * 1.5;
+                const freq05 = waveFrequency * 0.5;
+                const freq12 = waveFrequency * 1.2;
+
+                for (let i = 0; i < position.count; i++) {
+                    const x = position.getX(i);
+                    const y = position.getY(i);
+                    const waveX1 = Math.sin((x * waveFrequency) + tSpeed);
+                    const waveX2 = Math.sin((x * freq05) + tSpeed08);
+                    const waveY1 = Math.cos((y * freq12) + tSpeed15);
+                    let z = (waveX1 + waveX2 * 0.5 + waveY1 * 0.3) * waveAmplitude;
+
+                    z = Math.round(z * jitterFactor) / jitterFactor;
+                    position.setZ(i, z);
+                }
+
+                position.needsUpdate = true;
+                this.flagMesh.geometry.computeVertexNormals();
+                this.flagMesh.material.map.offset.x -= (waveSpeed * 0.001);
+
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        /* ========================================================================
+           [BLOCO 11] JS: Gráfico de Dados (Chart.js) e Inicialização Web
+           ======================================================================== */
+        function initChart() {
+            const colors = {
+                green: '#066B06',
+                yellow: '#F8DB08',
+                purple: '#9A88AA',
+                red: '#ED1923',
+                white: '#FFFFFF',
+                grid: 'rgba(255,255,255,0.2)'
+            };
+
+            const ctx = document.getElementById('competitorChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [['Jogabilidade', 'Arcade'], ['Combate', 'Veicular'], ['Pistas com', 'Segredos'], ['Estética', 'Retrô'], 'Customização'],
+                    datasets: [
+                        {
+                            label: 'OUSH NORDESTE',
+                            data: [9, 7, 10, 10, 4],
+                            backgroundColor: 'rgba(6, 107, 6, 0.3)',
+                            borderColor: colors.green,
+                            pointBackgroundColor: colors.green,
+                            borderWidth: 3
+                        },
+                        {
+                            label: 'Rush 2049',
+                            data: [10, 7, 10, 8, 7],
+                            backgroundColor: 'transparent',
+                            borderColor: colors.yellow,
+                            pointBackgroundColor: colors.yellow,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Destruction Derby',
+                            data: [6, 10, 4, 7, 3],
+                            backgroundColor: 'transparent',
+                            borderColor: colors.purple,
+                            pointBackgroundColor: colors.purple,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Dirt Showdown',
+                            data: [4, 9, 6, 4, 7],
+                            backgroundColor: 'transparent',
+                            borderColor: colors.red,
+                            pointBackgroundColor: colors.red,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'FlatOut 2',
+                            data: [9, 10, 6, 3, 5],
+                            backgroundColor: 'transparent',
+                            borderColor: colors.white,
+                            pointBackgroundColor: colors.white,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: colors.grid },
+                            grid: { color: colors.grid, circular: false },
+                            pointLabels: {
+                                color: '#fff',
+                                font: { family: "'Inter', sans-serif", weight: 'bold', style: 'italic', size: 14 }
+                            },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#fff',
+                                font: { family: "'Inter', sans-serif", weight: 'bold', style: 'italic', size: 14 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Setup App
+        function bootstrapApp() {
+            const bgApp = new PS1BackgroundScene();
+            bgApp.renderLoop();
+            initChart();
+        }
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            bootstrapApp();
+        } else {
+            document.addEventListener('DOMContentLoaded', bootstrapApp);
+        }
+    </script>
+</body>
+
+</html>
